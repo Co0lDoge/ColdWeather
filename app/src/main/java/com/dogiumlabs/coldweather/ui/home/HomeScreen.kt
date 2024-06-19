@@ -33,6 +33,7 @@ import com.dogiumlabs.coldweather.ui.theme.ColdWeatherTheme
 
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
+    /** Screen that displays basic weather info **/
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -75,6 +76,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 
 @Composable
 fun WeatherCard(modifier: Modifier = Modifier) {
+    /** Card in the center of the screen **/
     Card(
         modifier = modifier
             .clip(RoundedCornerShape(16.dp))
@@ -108,6 +110,7 @@ fun WeatherCard(modifier: Modifier = Modifier) {
 
 @Composable
 fun WeatherParametersTable(modifier: Modifier = Modifier) {
+    /** Table containing Precipitation, Wind Speed, Humidity **/
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly,
         modifier = modifier
@@ -137,6 +140,7 @@ fun WeatherParameter(
     imageVector: ImageVector,
     modifier: Modifier = Modifier
 ) {
+    /** Template for weather parameters display **/
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -159,6 +163,7 @@ fun WeatherParameter(
 
 @Composable
 fun WeatherScrollList(modifier: Modifier = Modifier) {
+    /** Scrollable Row with weather forecast for day **/
     LazyRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -181,6 +186,7 @@ fun WeatherScrollListItem(
     temperature: Int,
     modifier: Modifier = Modifier
 ) {
+    /** Card with time and temperature info**/
     Card(
         modifier = modifier
             .clip(RoundedCornerShape(16.dp))
