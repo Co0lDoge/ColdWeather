@@ -36,7 +36,9 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier.fillMaxSize()
+        modifier = modifier
+            .fillMaxSize()
+            .padding(20.dp)
     ) {
         Spacer(modifier = Modifier.weight(1f))
         Text(
@@ -54,7 +56,6 @@ fun HomeScreen(modifier: Modifier = Modifier) {
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(16.dp)
         ) {
             Text(
                 text = "Today",
@@ -68,7 +69,6 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         }
         WeatherScrollList(modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp)
         )
     }
 }
@@ -77,7 +77,6 @@ fun HomeScreen(modifier: Modifier = Modifier) {
 fun WeatherCard(modifier: Modifier = Modifier) {
     Card(
         modifier = modifier
-            .padding(16.dp)
             .clip(RoundedCornerShape(16.dp))
             .shadow(elevation = 4.dp)
     ) {
