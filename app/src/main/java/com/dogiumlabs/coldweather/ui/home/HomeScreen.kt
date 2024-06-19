@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Warning
@@ -25,6 +26,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dogiumlabs.coldweather.ui.theme.ColdWeatherTheme
@@ -38,7 +40,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     ) {
         Spacer(modifier = Modifier.weight(1f))
         Text(
-            text = "Today",
+            text = "London",
             style = MaterialTheme.typography.titleLarge
         )
         Text(
@@ -49,20 +51,25 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         Spacer(modifier = Modifier.weight(1f))
         Row(
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            modifier = modifier
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            WeatherScrollList(modifier = modifier.weight(0.7f))
-            WeatherScrollListItem(
-                time = "fwafaw",
-                imageVector = Icons.Filled.ArrowBack,
-                temperature = 25,
-                modifier = modifier.weight(0.25f)
+            Text(
+                text = "Today",
+                style = MaterialTheme.typography.titleMedium
+            )
+            ClickableText(
+                onClick = { /** TODO **/},
+                text = AnnotatedString("Next 7 Days >"),
+                style = MaterialTheme.typography.titleMedium
             )
         }
-
+        WeatherScrollList(modifier = modifier
+            .fillMaxWidth()
+            .padding(16.dp)
+        )
     }
 }
 
