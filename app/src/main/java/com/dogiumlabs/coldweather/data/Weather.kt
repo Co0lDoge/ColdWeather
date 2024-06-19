@@ -1,7 +1,9 @@
 package com.dogiumlabs.coldweather.data
 
 import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.Serializable
 
+@Serializable
 data class Weather(
     @SerializedName("last_updated_epoch") val lastUpdatedEpoch: Long,
     @SerializedName("last_updated") val lastUpdated: String,
@@ -34,6 +36,7 @@ data class Weather(
     @SerializedName("gust_kph") val windGustKph: Double
 )
 
+@Serializable
 data class Location(
     @SerializedName("name") val name: String,
     @SerializedName("region") val region: String,
@@ -45,6 +48,7 @@ data class Location(
     @SerializedName("localtime") val localTime: String
 )
 
+@Serializable
 data class Condition(
     @SerializedName("text") val conditionText: String,
     @SerializedName("icon") val conditionIcon: String,
