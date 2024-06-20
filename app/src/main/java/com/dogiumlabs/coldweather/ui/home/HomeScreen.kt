@@ -37,6 +37,7 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    // TODO: remove when data fetching is fixed
     val homeUiState = viewModel.homeUiState
     when (homeUiState) {
         HomeUiState.Error -> Text(text = "error")
