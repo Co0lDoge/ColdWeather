@@ -43,15 +43,5 @@ class HomeViewModel(private val weatherRepository: WeatherRepository) : ViewMode
             }
         }
     }
-
-    companion object {
-        val Factory: ViewModelProvider.Factory = viewModelFactory {
-            initializer {
-                val application = (this[APPLICATION_KEY] as ColdWeatherApplication)
-                val weatherRepository = application.container.weatherRepository
-                HomeViewModel(weatherRepository = weatherRepository)
-            }
-        }
-    }
 }
 

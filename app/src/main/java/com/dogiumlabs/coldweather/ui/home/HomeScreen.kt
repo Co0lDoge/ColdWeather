@@ -14,7 +14,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
@@ -31,12 +30,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dogiumlabs.coldweather.ui.theme.ColdWeatherTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.dogiumlabs.coldweather.ui.AppViewModelProvider
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    viewModel: HomeViewModel = viewModel(factory = HomeViewModel.Factory)
+    viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    val homeUiState = viewModel.homeUiState
+    when (homeUiState) {
+        HomeUiState.Error -> Text(text = "error")
+        HomeUiState.Loading -> Text(text = "loading")
+        is HomeUiState.Success -> Text(text = "Temperature is ${homeUiState.weather.temperatureCelsius}")
+    }
+
     /** Screen that displays basic weather info **/
     Column(
         verticalArrangement = Arrangement.Center,
