@@ -31,16 +31,15 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.dogiumlabs.coldweather.ui.theme.ColdWeatherTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
-import coil.compose.AsyncImagePainter.State.Empty.painter
 import coil.request.ImageRequest
 import com.dogiumlabs.coldweather.R
 import com.dogiumlabs.coldweather.data.Condition
 import com.dogiumlabs.coldweather.data.Current
 import com.dogiumlabs.coldweather.data.Location
 import com.dogiumlabs.coldweather.ui.AppViewModelProvider
+import com.dogiumlabs.coldweather.ui.theme.ColdWeatherTheme
 
 @Composable
 fun HomeScreen(
@@ -96,13 +95,14 @@ fun HomeWeatherScreen(
                 style = MaterialTheme.typography.titleMedium
             )
             ClickableText(
-                onClick = { /** TODO **/},
+                onClick = { /** TODO **/ },
                 text = AnnotatedString("Next 7 Days >"),
                 style = MaterialTheme.typography.titleMedium
             )
         }
-        WeatherScrollList(modifier = modifier
-            .fillMaxWidth()
+        WeatherScrollList(
+            modifier = modifier
+                .fillMaxWidth()
         )
     }
 }
