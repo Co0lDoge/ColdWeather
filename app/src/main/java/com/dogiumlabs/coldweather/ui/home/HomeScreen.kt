@@ -42,7 +42,7 @@ fun HomeScreen(
     when (homeUiState) {
         HomeUiState.Error -> Text(text = "error")
         HomeUiState.Loading -> Text(text = "loading")
-        is HomeUiState.Success -> Text(text = "Data is ${homeUiState.weather.current.uv}")
+        is HomeUiState.Success -> Text(text = "Data is ${homeUiState.weather.current.tempC}")
     }
 
     /** Screen that displays basic weather info **/
