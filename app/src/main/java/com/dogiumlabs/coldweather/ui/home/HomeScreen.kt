@@ -49,13 +49,13 @@ fun HomeScreen(
     /** Top level composable that displays content based on UiState's status**/
     val homeUiState = viewModel.homeUiState
     when (homeUiState) {
-        HomeUiState.Error -> Text(text = "error")
-        HomeUiState.Loading -> Text(text = "loading")
         is HomeUiState.Success -> HomeWeatherScreen(
             location = homeUiState.weather.location,
             currentWeather = homeUiState.weather.current,
             modifier = modifier
         )
+        HomeUiState.Loading -> HomeLoadingScreen(modifier)
+        HomeUiState.Error -> HomeErrorScreen(modifier)
     }
 }
 
@@ -277,6 +277,72 @@ fun WeatherScrollListItem(
 }
 
 @Composable
+fun HomeLoadingScreen(modifier: Modifier = Modifier) {
+    /** Screen that displays basic weather info **/
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .fillMaxSize()
+            .padding(20.dp)
+    ) {
+        Card(
+            modifier = modifier
+                .clip(RoundedCornerShape(16.dp))
+                .shadow(elevation = 4.dp)
+        ) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = modifier.padding(32.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.loading),
+                    contentDescription = "Loading..."
+                )
+                Text(
+                    text = "Loading...",
+                    style = MaterialTheme.typography.displaySmall
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun HomeErrorScreen(modifier: Modifier = Modifier) {
+    /** Screen that displays basic weather info **/
+    Column(
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = modifier
+            .fillMaxSize()
+            .padding(20.dp)
+    ) {
+        Card(
+            modifier = modifier
+                .clip(RoundedCornerShape(16.dp))
+                .shadow(elevation = 4.dp)
+        ) {
+            Column(
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally,
+                modifier = modifier.padding(32.dp)
+            ) {
+                Image(
+                    painter = painterResource(id = R.drawable.error),
+                    contentDescription = "Error"
+                )
+                Text(
+                    text = "Error",
+                    style = MaterialTheme.typography.displaySmall
+                )
+            }
+        }
+    }
+}
+
+@Composable
 @Preview(showBackground = true)
 fun HomeScreenWeatherPreview() {
     ColdWeatherTheme {
@@ -326,5 +392,21 @@ fun HomeScreenWeatherPreview() {
             location = previewLocation,
             currentWeather = previewWeather
         )
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun HomeLoadingScreenPreview() {
+    ColdWeatherTheme {
+        HomeLoadingScreen()
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+fun HomeErrorScreenPreview() {
+    ColdWeatherTheme {
+        HomeErrorScreen()
     }
 }
