@@ -1,57 +1,63 @@
 package com.dogiumlabs.coldweather.data
 
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class Weather(
-    @SerializedName("last_updated_epoch") val lastUpdatedEpoch: Long,
-    @SerializedName("last_updated") val lastUpdated: String,
-    @SerializedName("temp_c") val temperatureCelsius: Double,
-    @SerializedName("temp_f") val temperatureFahrenheit: Double,
-    @SerializedName("is_day") val isDay: Int,
-    @SerializedName("condition") val weatherCondition: Condition,
-    @SerializedName("wind_mph") val windSpeedMph: Double,
-    @SerializedName("wind_kph") val windSpeedKph: Double,
-    @SerializedName("wind_degree") val windDegree: Int,
-    @SerializedName("wind_dir") val windDirection: String,
-    @SerializedName("pressure_mb") val pressureMb: Double,
-    @SerializedName("pressure_in") val pressureIn: Double,
-    @SerializedName("precip_mm") val precipitationMm: Double,
-    @SerializedName("precip_in") val precipitationIn: Double,
-    @SerializedName("humidity") val humidity: Int,
-    @SerializedName("cloud") val cloudCover: Int,
-    @SerializedName("feelslike_c") val feelsLikeCelsius: Double,
-    @SerializedName("feelslike_f") val feelsLikeFahrenheit: Double,
-    @SerializedName("windchill_c") val windChillCelsius: Double,
-    @SerializedName("windchill_f") val windChillFahrenheit: Double,
-    @SerializedName("heatindex_c") val heatIndexCelsius: Double,
-    @SerializedName("heatindex_f") val heatIndexFahrenheit: Double,
-    @SerializedName("dewpoint_c") val dewPointCelsius: Double,
-    @SerializedName("dewpoint_f") val dewPointFahrenheit: Double,
-    @SerializedName("vis_km") val visibilityKm: Double,
-    @SerializedName("vis_miles") val visibilityMiles: Double,
-    @SerializedName("uv") val uvIndex: Int,
-    @SerializedName("gust_mph") val windGustMph: Double,
-    @SerializedName("gust_kph") val windGustKph: Double
+    @SerialName("location") val location: Location,
+    @SerialName("current") val current: Current
 )
 
 @Serializable
 data class Location(
-    @SerializedName("name") val name: String,
-    @SerializedName("region") val region: String,
-    @SerializedName("country") val country: String,
-    @SerializedName("lat") val latitude: Double,
-    @SerializedName("lon") val longitude: Double,
-    @SerializedName("tz_id") val timeZoneId: String,
-    @SerializedName("localtime_epoch") val localTimeEpoch: Long,
-    @SerializedName("localtime") val localTime: String
+    @SerialName("name") val name: String,
+    @SerialName("region") val region: String,
+    @SerialName("country") val country: String,
+    @SerialName("lat") val latitude: Double,
+    @SerialName("lon") val longitude: Double,
+    @SerialName("tz_id") val timeZoneId: String,
+    @SerialName("localtime_epoch") val localTimeEpoch: Long,
+    @SerialName("localtime") val localTime: String
+)
+
+@Serializable
+data class Current(
+    @SerialName("last_updated_epoch") val lastUpdatedEpoch: Long,
+    @SerialName("last_updated") val lastUpdated: String,
+    @SerialName("temp_c") val tempC: Double,
+    @SerialName("temp_f") val tempF: Double,
+    @SerialName("is_day") val isDay: Boolean,
+    @SerialName("condition") val condition: Condition,
+
+    @SerialName("wind_mph") val windMph: Double,
+    @SerialName("wind_kph") val windKph: Double,
+    @SerialName("wind_degree") val windDegree: Int,
+    @SerialName("wind_dir") val windDirection: String,
+    @SerialName("pressure_mb") val pressureMb: Int,
+    @SerialName("pressure_in") val pressureIn: Double,
+    @SerialName("precip_mm") val precipMm: Double,
+    @SerialName("precip_in") val precipIn: Double,
+    val humidity: Int,
+    val cloud: Int,
+    @SerialName("feelslike_c") val feelsLikeCelsius: Double,
+    @SerialName("feelslike_f") val feelsLikeFahrenheit: Double,
+    @SerialName("windchill_c") val windChillCelsius: Double,
+    @SerialName("windchill_f") val windChillFahrenheit: Double,
+    @SerialName("heatindex_c") val heatIndexCelsius: Double,
+    @SerialName("heatindex_f") val heatIndexFahrenheit: Double,
+    @SerialName("dewpoint_c") val dewPointCelsius: Double,
+    @SerialName("dewpoint_f") val dewPointFahrenheit: Double,
+    @SerialName("vis_km") val visibilityKm: Int,
+    @SerialName("vis_miles") val visibilityMiles: Int,
+    val uv: Int,
+    @SerialName("gust_mph") val gustMph: Double,
+    @SerialName("gust_kph") val gustKph: Double
 )
 
 @Serializable
 data class Condition(
-    @SerializedName("text") val conditionText: String,
-    @SerializedName("icon") val conditionIcon: String,
-    @SerializedName("code") val conditionCode: Int
+    @SerialName("text") val text: String,
+    @SerialName("icon") val icon: String,
+    @SerialName("code") val code: Int
 )
-
