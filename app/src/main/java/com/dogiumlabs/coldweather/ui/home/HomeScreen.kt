@@ -23,13 +23,20 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dogiumlabs.coldweather.ui.theme.ColdWeatherTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
+import coil.compose.AsyncImage
+import coil.compose.AsyncImagePainter.State.Empty.painter
+import coil.request.ImageRequest
+import com.dogiumlabs.coldweather.R
 import com.dogiumlabs.coldweather.data.Condition
 import com.dogiumlabs.coldweather.data.Current
 import com.dogiumlabs.coldweather.data.Location
@@ -116,8 +123,12 @@ fun WeatherCard(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = modifier.padding(32.dp)
         ) {
-            Image(
-                imageVector = Icons.Filled.Warning,
+            AsyncImage(
+                model = ImageRequest.Builder(context = LocalContext.current)
+                    .data("https://" + currentWeather.condition.icon)
+                    .build(),
+                error = painterResource(id = R.drawable.error),
+                //placeholder = painterResource(id = R.drawable.loading),
                 contentDescription = currentWeather.condition.text,
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
@@ -153,20 +164,20 @@ fun WeatherParametersTable(
         WeatherParameter(
             name = "Precipitation",
             value = "${currentWeather.precipMm}%",
-            imageVector = Icons.Filled.Warning,
+            painter = painterResource(id = R.drawable.humidity),
             modifier = Modifier.weight(1f)
         )
         WeatherParameter(
             name = "Wind Speed",
             value = "${currentWeather.windKph} km/h",
-            imageVector = Icons.Filled.Warning,
+            painter = painterResource(id = R.drawable.wind_speed),
             modifier = Modifier.weight(1f)
 
         )
         WeatherParameter(
             name = "Humidity",
             value = "${currentWeather.humidity}%",
-            imageVector = Icons.Filled.Warning,
+            painter = painterResource(id = R.drawable.humidity),
             modifier = Modifier.weight(1f)
         )
     }
@@ -176,7 +187,7 @@ fun WeatherParametersTable(
 fun WeatherParameter(
     name: String,
     value: String,
-    imageVector: ImageVector,
+    painter: Painter,
     modifier: Modifier = Modifier
 ) {
     /** Template for weather parameters display **/
@@ -186,7 +197,7 @@ fun WeatherParameter(
         modifier = modifier
     ) {
         Image(
-            imageVector = imageVector,
+            painter = painter,
             contentDescription = null,
             contentScale = ContentScale.FillBounds,
             modifier = Modifier
@@ -269,7 +280,7 @@ fun WeatherScrollListItem(
 @Preview(showBackground = true)
 fun HomeScreenWeatherPreview() {
     ColdWeatherTheme {
-        val previewLocation: Location = Location(
+        val previewLocation = Location(
             "City Name",
             "Region Name",
             "Country Name",
@@ -279,7 +290,7 @@ fun HomeScreenWeatherPreview() {
             20,
             "2001-03-21 15.30"
         )
-        val previewWeather: Current = Current(
+        val previewWeather = Current(
             lastUpdatedEpoch = 20,
             lastUpdated = "time",
             tempC = 20.0,
