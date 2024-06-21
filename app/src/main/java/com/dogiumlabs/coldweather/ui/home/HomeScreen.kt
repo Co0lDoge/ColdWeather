@@ -1,5 +1,16 @@
 package com.dogiumlabs.coldweather.ui.home
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkHorizontally
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.animation.slideInHorizontally
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutHorizontally
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -46,16 +57,36 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    /** Top level composable that displays content based on UiState's status**/
+    /** Top level composable that displays content based on UiState's status **/
     val homeUiState = viewModel.homeUiState
-    when (homeUiState) {
-        is HomeUiState.Success -> HomeWeatherScreen(
-            location = homeUiState.weather.location,
-            currentWeather = homeUiState.weather.current,
-            modifier = modifier
-        )
-        HomeUiState.Loading -> HomeLoadingScreen(modifier)
-        HomeUiState.Error -> HomeErrorScreen(modifier)
+    AnimatedVisibility(
+        visible = homeUiState is HomeUiState.Success,
+        enter = slideInHorizontally(animationSpec = spring(
+            dampingRatio = Spring.DampingRatioLowBouncy,
+            stiffness = Spring.StiffnessLow
+        )),
+        exit = slideOutVertically()
+    ) {
+        if (homeUiState is HomeUiState.Success)
+            HomeWeatherScreen(
+                location = homeUiState.weather.location,
+                currentWeather = homeUiState.weather.current,
+                modifier = modifier
+            )
+    }
+    AnimatedVisibility(
+        visible = homeUiState == HomeUiState.Loading,
+        enter = fadeIn(),
+        exit = slideOutHorizontally(targetOffsetX = { it/2 }) + fadeOut()
+    ) {
+        HomeLoadingScreen(modifier)
+    }
+    AnimatedVisibility(
+        visible = homeUiState == HomeUiState.Error,
+        enter = fadeIn(),
+        exit = fadeOut()
+    ) {
+        HomeErrorScreen(modifier)
     }
 }
 
