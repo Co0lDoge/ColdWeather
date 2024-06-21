@@ -1,7 +1,6 @@
 package com.dogiumlabs.coldweather.data
 
 import com.google.gson.annotations.SerializedName
-import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -12,24 +11,26 @@ data class Weather(
 
 @Serializable
 data class Location(
-    @SerializedName("name") val name: String,
-    @SerializedName("region") val region: String,
-    @SerializedName("country") val country: String,
-    @SerializedName("lat") val latitude: Double,
-    @SerializedName("lon") val longitude: Double,
+    /** Weather's location data **/
+    val name: String,
+    val region: String,
+    val country: String,
+    val latitude: Double,
+    val longitude: Double,
     @SerializedName("tz_id") val timeZoneId: String,
-    @SerializedName("localtime_epoch") val localTimeEpoch: Long,
+    val localTimeEpoch: Long,
     @SerializedName("localtime") val localTime: String
 )
 
 @Serializable
 data class Current(
+    /** Current weather data **/
     @SerializedName("last_updated_epoch") val lastUpdatedEpoch: Long,
     @SerializedName("last_updated") val lastUpdated: String,
     @SerializedName("temp_c") val tempC: Double,
     @SerializedName("temp_f") val tempF: Double,
     @SerializedName("is_day") val isDay: Byte,
-    @SerializedName("condition") val condition: Condition,
+    val condition: Condition,
 
     @SerializedName("wind_mph") val windMph: Double,
     @SerializedName("wind_kph") val windKph: Double,
@@ -58,7 +59,7 @@ data class Current(
 
 @Serializable
 data class Condition(
-    @SerializedName("text") val text: String,
-    @SerializedName("icon") val icon: String,
-    @SerializedName("code") val code: Int
+    val text: String,
+    val icon: String,
+    val code: Int
 )

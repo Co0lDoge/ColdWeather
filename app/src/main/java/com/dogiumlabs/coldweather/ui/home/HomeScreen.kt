@@ -30,6 +30,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.dogiumlabs.coldweather.ui.theme.ColdWeatherTheme
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.dogiumlabs.coldweather.data.Condition
+import com.dogiumlabs.coldweather.data.Current
+import com.dogiumlabs.coldweather.data.Location
 import com.dogiumlabs.coldweather.ui.AppViewModelProvider
 
 @Composable
@@ -37,14 +40,25 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
-    // TODO: remove when data fetching is fixed
+    /** Top level composable that displays content based on UiState's status**/
     val homeUiState = viewModel.homeUiState
     when (homeUiState) {
         HomeUiState.Error -> Text(text = "error")
         HomeUiState.Loading -> Text(text = "loading")
-        is HomeUiState.Success -> Text(text = "Data is ${homeUiState.weather.current.tempC}")
+        is HomeUiState.Success -> HomeWeatherScreen(
+            location = homeUiState.weather.location,
+            currentWeather = homeUiState.weather.current,
+            modifier = modifier
+        )
     }
+}
 
+@Composable
+fun HomeWeatherScreen(
+    location: Location,
+    currentWeather: Current,
+    modifier: Modifier = Modifier
+) {
     /** Screen that displays basic weather info **/
     Column(
         verticalArrangement = Arrangement.Center,
@@ -55,14 +69,14 @@ fun HomeScreen(
     ) {
         Spacer(modifier = Modifier.weight(1f))
         Text(
-            text = "London",
+            text = location.name,
             style = MaterialTheme.typography.titleLarge
         )
         Text(
-            text = "Monday June 17",
+            text = location.localTime,
             style = MaterialTheme.typography.titleSmall
         )
-        WeatherCard()
+        WeatherCard(currentWeather)
         Spacer(modifier = Modifier.weight(1f))
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -87,7 +101,10 @@ fun HomeScreen(
 }
 
 @Composable
-fun WeatherCard(modifier: Modifier = Modifier) {
+fun WeatherCard(
+    currentWeather: Current,
+    modifier: Modifier = Modifier
+) {
     /** Card in the center of the screen **/
     Card(
         modifier = modifier
@@ -101,45 +118,54 @@ fun WeatherCard(modifier: Modifier = Modifier) {
         ) {
             Image(
                 imageVector = Icons.Filled.Warning,
-                contentDescription = null,
+                contentDescription = currentWeather.condition.text,
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
                     .height(256.dp)
                     .width(256.dp)
             )
             Text(
-                text = "Mostly Sunny",
+                text = currentWeather.condition.text,
                 style = MaterialTheme.typography.titleMedium
             )
             Text(
-                text = "25°C",
+                text = "${currentWeather.tempC}°C",
                 style = MaterialTheme.typography.headlineMedium
             )
-            WeatherParametersTable(modifier = Modifier.padding(top = 16.dp))
+            WeatherParametersTable(
+                currentWeather = currentWeather,
+                modifier = Modifier.padding(top = 16.dp)
+            )
         }
     }
 }
 
 @Composable
-fun WeatherParametersTable(modifier: Modifier = Modifier) {
+fun WeatherParametersTable(
+    currentWeather: Current,
+    modifier: Modifier = Modifier
+) {
     /** Table containing Precipitation, Wind Speed, Humidity **/
     Row(
         horizontalArrangement = Arrangement.SpaceEvenly,
         modifier = modifier
     ) {
         WeatherParameter(
-            text = "Precipitation",
+            name = "Precipitation",
+            value = "${currentWeather.precipMm}%",
             imageVector = Icons.Filled.Warning,
             modifier = Modifier.weight(1f)
         )
         WeatherParameter(
-            text = "Wind Speed",
+            name = "Wind Speed",
+            value = "${currentWeather.windKph} km/h",
             imageVector = Icons.Filled.Warning,
             modifier = Modifier.weight(1f)
 
         )
         WeatherParameter(
-            text = "Humidity",
+            name = "Humidity",
+            value = "${currentWeather.humidity}%",
             imageVector = Icons.Filled.Warning,
             modifier = Modifier.weight(1f)
         )
@@ -148,7 +174,8 @@ fun WeatherParametersTable(modifier: Modifier = Modifier) {
 
 @Composable
 fun WeatherParameter(
-    text: String,
+    name: String,
+    value: String,
     imageVector: ImageVector,
     modifier: Modifier = Modifier
 ) {
@@ -167,8 +194,12 @@ fun WeatherParameter(
                 .width(32.dp)
         )
         Text(
-            text = text,
+            text = name,
             style = MaterialTheme.typography.bodyMedium
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.titleSmall
         )
     }
 }
@@ -181,11 +212,11 @@ fun WeatherScrollList(modifier: Modifier = Modifier) {
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
     ) {
-        items(5) { index ->
+        items(24) { index ->
             WeatherScrollListItem(
                 time = "$index pm",
                 imageVector = Icons.Filled.Warning,
-                temperature = 25
+                temperature = 0
             )
         }
     }
@@ -236,8 +267,53 @@ fun WeatherScrollListItem(
 
 @Composable
 @Preview(showBackground = true)
-fun HomeScreenPreview() {
+fun HomeScreenWeatherPreview() {
     ColdWeatherTheme {
-        HomeScreen()
+        val previewLocation: Location = Location(
+            "City Name",
+            "Region Name",
+            "Country Name",
+            20.0,
+            20.0,
+            "Timezone Id",
+            20,
+            "2001-03-21 15.30"
+        )
+        val previewWeather: Current = Current(
+            lastUpdatedEpoch = 20,
+            lastUpdated = "time",
+            tempC = 20.0,
+            tempF = 20.0,
+            isDay = 1,
+            condition = Condition("Sunny", "icon url", 1000),
+            windMph = 0.0,
+            windKph = 0.0,
+            windDegree = 0,
+            windDirection = "N",
+            pressureMb = 1013,
+            pressureIn = 29.92,
+            precipMm = 0.0,
+            precipIn = 0.0,
+            humidity = 50,
+            cloud = 20,
+            feelsLikeCelsius = 19.5,
+            feelsLikeFahrenheit = 67.1,
+            windChillCelsius = 18.0,
+            windChillFahrenheit = 64.4,
+            heatIndexCelsius = 22.0,
+            heatIndexFahrenheit = 71.6,
+            dewPointCelsius = 15.0,
+            dewPointFahrenheit = 59.0,
+            visibilityKm = 10,
+            visibilityMiles = 6,
+            uv = 5,
+            gustMph = 0.0,
+            gustKph = 0.0
+
+        )
+        HomeWeatherScreen(
+            location = previewLocation,
+            currentWeather = previewWeather
+        )
     }
 }
