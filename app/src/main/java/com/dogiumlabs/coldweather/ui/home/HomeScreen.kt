@@ -23,6 +23,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Card
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -117,6 +118,7 @@ fun HomeWeatherScreen(
             horizontalArrangement = Arrangement.SpaceBetween,
             modifier = Modifier
                 .fillMaxWidth()
+                .padding(bottom = 16.dp)
         ) {
             Text(
                 text = "Today",
@@ -125,7 +127,7 @@ fun HomeWeatherScreen(
             ClickableText(
                 onClick = { /** TODO **/ },
                 text = AnnotatedString("Next 7 Days >"),
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium.copy(color = LocalContentColor.current),
             )
         }
         WeatherScrollList(
