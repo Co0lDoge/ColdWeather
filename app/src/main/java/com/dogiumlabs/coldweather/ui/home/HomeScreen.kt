@@ -67,6 +67,7 @@ fun HomeScreen(
         if (homeUiState is HomeUiState.Success)
             HomeWeatherScreen(
                 weather = homeUiState.weather,
+                timeFormatter = viewModel::timeFormatter,
                 modifier = modifier
             )
     }
@@ -89,6 +90,7 @@ fun HomeScreen(
 @Composable
 fun HomeWeatherScreen(
     weather: Weather,
+    timeFormatter: (String) -> String,
     modifier: Modifier = Modifier
 ) {
     /** Screen that displays basic weather info **/
@@ -128,6 +130,7 @@ fun HomeWeatherScreen(
         }
         WeatherScrollList(
             forecastDay = weather.forecast.forecastDayList[0].forecastHourList,
+            timeFormatter = timeFormatter,
             // Returns the first day of weather forecast
             modifier = modifier
                 .fillMaxWidth()
@@ -246,6 +249,7 @@ fun WeatherParameter(
 @Composable
 fun WeatherScrollList(
     forecastDay: List<ForecastHour>,
+    timeFormatter: (String) -> String,
     modifier: Modifier = Modifier
 ) {
     /** Scrollable Row with weather forecast for day **/
@@ -255,7 +259,10 @@ fun WeatherScrollList(
         modifier = modifier
     ) {
         items(forecastDay) { forecastHour ->
-            WeatherScrollListItem(forecastHour)
+            WeatherScrollListItem(
+                forecastHourItem = forecastHour,
+                timeFormatter = timeFormatter,
+            )
         }
     }
 }
@@ -263,6 +270,7 @@ fun WeatherScrollList(
 @Composable
 fun WeatherScrollListItem(
     forecastHourItem: ForecastHour,
+    timeFormatter: (String) -> String,
     modifier: Modifier = Modifier
 ) {
     /** Card with time and temperature info**/
@@ -282,7 +290,7 @@ fun WeatherScrollListItem(
             )
         ) {
             Text(
-                text = forecastHourItem.time,
+                text = timeFormatter(forecastHourItem.time),
                 style = MaterialTheme.typography.bodySmall
             )
             AsyncImage(

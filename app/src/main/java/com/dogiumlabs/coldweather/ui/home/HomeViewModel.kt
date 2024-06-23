@@ -38,5 +38,16 @@ class HomeViewModel(private val weatherRepository: WeatherRepository) : ViewMode
             }
         }
     }
+
+    fun timeFormatter(time: String): String {
+        /** Removes all data from time string, leaving only hour data **/
+        val regex = Regex("\\d{2}:\\d{2}")
+        val matchResult = regex.find(time)?.value
+
+        if (matchResult != null)
+            return matchResult
+        else
+            return "Invalid time format"
+    }
 }
 
