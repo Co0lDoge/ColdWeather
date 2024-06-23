@@ -21,3 +21,18 @@ data class ForecastHour(
     val condition: Condition,
 )
 
+
+fun getPreviewForecast() = Forecast(
+    listOf(
+        ForecastDay(
+            listOf(
+                ForecastHour("15:00", 28.5, 83.3, getPreviewCondition()),
+                ForecastHour("18:00", 22.8, 73.0, getPreviewCondition()),
+                ForecastHour("12:00", 25.0, 77.0, getPreviewCondition()),
+                ForecastHour("15:00", 28.5, 83.3, getPreviewCondition()),
+                ForecastHour("18:00", 22.8, 73.0, getPreviewCondition()),
+                ForecastHour("12:00", 25.0, 77.0, getPreviewCondition())
+            )
+        )
+    )
+)

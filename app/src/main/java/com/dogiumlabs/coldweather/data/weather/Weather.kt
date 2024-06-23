@@ -1,6 +1,5 @@
 package com.dogiumlabs.coldweather.data.weather
 
-import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
@@ -9,3 +8,11 @@ data class Weather(
     val current: Current,
     val forecast: Forecast,
 )
+
+
+fun getPreviewWeather() = Weather(
+    location = getPreviewLocation(),
+    current = getPreviewCurrent(),
+    forecast = getPreviewForecast()
+)
+

@@ -15,3 +15,14 @@ data class Location(
     val localTimeEpoch: Long,
     @SerializedName("localtime") val localTime: String
 )
+
+fun getPreviewLocation() = Location(
+    "City Name",
+    "Region Name",
+    "Country Name",
+    20.0,
+    20.0,
+    "Timezone Id",
+    20,
+    "2001-03-21 15.30"
+)
