@@ -5,12 +5,12 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Forecast(
-    @SerializedName("forecastday") val forecastDay: ForecastDay
+    @SerializedName("forecastday") val forecastDayList: List<ForecastDay>
 )
 
 @Serializable
 data class ForecastDay(
-    val hourList: List<ForecastHour>
+    @SerializedName("hour") val forecastHourList: List<ForecastHour>
 )
 
 @Serializable
@@ -20,3 +20,4 @@ data class ForecastHour(
     @SerializedName("temp_f") val tempF: Double,
     val condition: Condition,
 )
+

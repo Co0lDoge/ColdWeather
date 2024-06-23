@@ -42,7 +42,6 @@ import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.dogiumlabs.coldweather.R
 import com.dogiumlabs.coldweather.data.weather.Current
-import com.dogiumlabs.coldweather.data.weather.ForecastDay
 import com.dogiumlabs.coldweather.data.weather.ForecastHour
 import com.dogiumlabs.coldweather.data.weather.Weather
 import com.dogiumlabs.coldweather.ui.AppViewModelProvider
@@ -128,7 +127,8 @@ fun HomeWeatherScreen(
             )
         }
         WeatherScrollList(
-            forecastDay = weather.forecast.forecastDay,
+            forecastDay = weather.forecast.forecastDayList[0].forecastHourList,
+            // Returns the first day of weather forecast
             modifier = modifier
                 .fillMaxWidth()
         )
@@ -245,7 +245,7 @@ fun WeatherParameter(
 
 @Composable
 fun WeatherScrollList(
-    forecastDay: ForecastDay,
+    forecastDay: List<ForecastHour>,
     modifier: Modifier = Modifier
 ) {
     /** Scrollable Row with weather forecast for day **/
@@ -254,7 +254,7 @@ fun WeatherScrollList(
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
     ) {
-        items(forecastDay.hourList) { forecastHour ->
+        items(forecastDay) { forecastHour ->
             WeatherScrollListItem(forecastHour)
         }
     }
@@ -294,11 +294,11 @@ fun WeatherScrollListItem(
                 contentDescription = forecastHourItem.condition.text,
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
-                    .height(256.dp)
-                    .width(256.dp)
+                    .height(32.dp)
+                    .width(32.dp)
             )
             Text(
-                text = forecastHourItem.tempC.toString(),
+                text = "${forecastHourItem.tempC}°C",
                 style = MaterialTheme.typography.bodyMedium
             )
         }
