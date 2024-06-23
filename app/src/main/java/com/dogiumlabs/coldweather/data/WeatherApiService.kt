@@ -1,5 +1,6 @@
 package com.dogiumlabs.coldweather.data
 
+import com.dogiumlabs.coldweather.data.weather.Weather
 import retrofit2.http.GET
 
 interface WeatherApiService {

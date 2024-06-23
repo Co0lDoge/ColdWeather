@@ -5,10 +5,7 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
-import androidx.compose.animation.shrinkHorizontally
-import androidx.compose.animation.shrinkVertically
 import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
@@ -22,10 +19,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -35,7 +31,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.painter.Painter
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -46,9 +41,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.dogiumlabs.coldweather.R
-import com.dogiumlabs.coldweather.data.Condition
-import com.dogiumlabs.coldweather.data.Current
-import com.dogiumlabs.coldweather.data.Location
+import com.dogiumlabs.coldweather.data.weather.Current
+import com.dogiumlabs.coldweather.data.weather.ForecastDay
+import com.dogiumlabs.coldweather.data.weather.ForecastHour
+import com.dogiumlabs.coldweather.data.weather.Weather
 import com.dogiumlabs.coldweather.ui.AppViewModelProvider
 import com.dogiumlabs.coldweather.ui.theme.ColdWeatherTheme
 
@@ -61,23 +57,24 @@ fun HomeScreen(
     val homeUiState = viewModel.homeUiState
     AnimatedVisibility(
         visible = homeUiState is HomeUiState.Success,
-        enter = slideInHorizontally(animationSpec = spring(
-            dampingRatio = Spring.DampingRatioLowBouncy,
-            stiffness = Spring.StiffnessLow
-        )),
+        enter = slideInHorizontally(
+            animationSpec = spring(
+                dampingRatio = Spring.DampingRatioLowBouncy,
+                stiffness = Spring.StiffnessLow
+            )
+        ),
         exit = slideOutVertically()
     ) {
         if (homeUiState is HomeUiState.Success)
             HomeWeatherScreen(
-                location = homeUiState.weather.location,
-                currentWeather = homeUiState.weather.current,
+                weather = homeUiState.weather,
                 modifier = modifier
             )
     }
     AnimatedVisibility(
         visible = homeUiState == HomeUiState.Loading,
         enter = fadeIn(),
-        exit = slideOutHorizontally(targetOffsetX = { it/2 }) + fadeOut()
+        exit = slideOutHorizontally(targetOffsetX = { it / 2 }) + fadeOut()
     ) {
         HomeLoadingScreen(modifier)
     }
@@ -92,8 +89,7 @@ fun HomeScreen(
 
 @Composable
 fun HomeWeatherScreen(
-    location: Location,
-    currentWeather: Current,
+    weather: Weather,
     modifier: Modifier = Modifier
 ) {
     /** Screen that displays basic weather info **/
@@ -106,14 +102,14 @@ fun HomeWeatherScreen(
     ) {
         Spacer(modifier = Modifier.weight(1f))
         Text(
-            text = location.name,
+            text = weather.location.name,
             style = MaterialTheme.typography.titleLarge
         )
         Text(
-            text = location.localTime,
+            text = weather.location.localTime,
             style = MaterialTheme.typography.titleSmall
         )
-        WeatherCard(currentWeather)
+        WeatherCard(weather.current)
         Spacer(modifier = Modifier.weight(1f))
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -132,6 +128,7 @@ fun HomeWeatherScreen(
             )
         }
         WeatherScrollList(
+            forecastDay = weather.forecast.forecastDay,
             modifier = modifier
                 .fillMaxWidth()
         )
@@ -247,28 +244,25 @@ fun WeatherParameter(
 }
 
 @Composable
-fun WeatherScrollList(modifier: Modifier = Modifier) {
+fun WeatherScrollList(
+    forecastDay: ForecastDay,
+    modifier: Modifier = Modifier
+) {
     /** Scrollable Row with weather forecast for day **/
     LazyRow(
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
         modifier = modifier
     ) {
-        items(24) { index ->
-            WeatherScrollListItem(
-                time = "$index pm",
-                imageVector = Icons.Filled.Warning,
-                temperature = 0
-            )
+        items(forecastDay.hourList) { forecastHour ->
+            WeatherScrollListItem(forecastHour)
         }
     }
 }
 
 @Composable
 fun WeatherScrollListItem(
-    time: String,
-    imageVector: ImageVector,
-    temperature: Int,
+    forecastHourItem: ForecastHour,
     modifier: Modifier = Modifier
 ) {
     /** Card with time and temperature info**/
@@ -288,19 +282,23 @@ fun WeatherScrollListItem(
             )
         ) {
             Text(
-                text = time,
+                text = forecastHourItem.time,
                 style = MaterialTheme.typography.bodySmall
             )
-            Image(
-                imageVector = imageVector,
-                contentDescription = null,
+            AsyncImage(
+                model = ImageRequest.Builder(context = LocalContext.current)
+                    .data("https://" + forecastHourItem.condition.icon)
+                    .build(),
+                error = painterResource(id = R.drawable.error),
+                //placeholder = painterResource(id = R.drawable.loading),
+                contentDescription = forecastHourItem.condition.text,
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
-                    .height(32.dp)
-                    .width(32.dp)
+                    .height(256.dp)
+                    .width(256.dp)
             )
             Text(
-                text = "$temperature°",
+                text = forecastHourItem.tempC.toString(),
                 style = MaterialTheme.typography.bodyMedium
             )
         }
@@ -373,58 +371,58 @@ fun HomeErrorScreen(modifier: Modifier = Modifier) {
     }
 }
 
-@Composable
-@Preview(showBackground = true)
-fun HomeScreenWeatherPreview() {
-    ColdWeatherTheme {
-        val previewLocation = Location(
-            "City Name",
-            "Region Name",
-            "Country Name",
-            20.0,
-            20.0,
-            "Timezone Id",
-            20,
-            "2001-03-21 15.30"
-        )
-        val previewWeather = Current(
-            lastUpdatedEpoch = 20,
-            lastUpdated = "time",
-            tempC = 20.0,
-            tempF = 20.0,
-            isDay = 1,
-            condition = Condition("Sunny", "icon url", 1000),
-            windMph = 0.0,
-            windKph = 0.0,
-            windDegree = 0,
-            windDirection = "N",
-            pressureMb = 1013,
-            pressureIn = 29.92,
-            precipMm = 0.0,
-            precipIn = 0.0,
-            humidity = 50,
-            cloud = 20,
-            feelsLikeCelsius = 19.5,
-            feelsLikeFahrenheit = 67.1,
-            windChillCelsius = 18.0,
-            windChillFahrenheit = 64.4,
-            heatIndexCelsius = 22.0,
-            heatIndexFahrenheit = 71.6,
-            dewPointCelsius = 15.0,
-            dewPointFahrenheit = 59.0,
-            visibilityKm = 10,
-            visibilityMiles = 6,
-            uv = 5,
-            gustMph = 0.0,
-            gustKph = 0.0
-
-        )
-        HomeWeatherScreen(
-            location = previewLocation,
-            currentWeather = previewWeather
-        )
-    }
-}
+//@Composable
+//@Preview(showBackground = true)
+//fun HomeScreenWeatherPreview() {
+//    ColdWeatherTheme {
+//        val previewLocation = Location(
+//            "City Name",
+//            "Region Name",
+//            "Country Name",
+//            20.0,
+//            20.0,
+//            "Timezone Id",
+//            20,
+//            "2001-03-21 15.30"
+//        )
+//        val previewWeather = Current(
+//            lastUpdatedEpoch = 20,
+//            lastUpdated = "time",
+//            tempC = 20.0,
+//            tempF = 20.0,
+//            isDay = 1,
+//            condition = Condition("Sunny", "icon url", 1000),
+//            windMph = 0.0,
+//            windKph = 0.0,
+//            windDegree = 0,
+//            windDirection = "N",
+//            pressureMb = 1013,
+//            pressureIn = 29.92,
+//            precipMm = 0.0,
+//            precipIn = 0.0,
+//            humidity = 50,
+//            cloud = 20,
+//            feelsLikeCelsius = 19.5,
+//            feelsLikeFahrenheit = 67.1,
+//            windChillCelsius = 18.0,
+//            windChillFahrenheit = 64.4,
+//            heatIndexCelsius = 22.0,
+//            heatIndexFahrenheit = 71.6,
+//            dewPointCelsius = 15.0,
+//            dewPointFahrenheit = 59.0,
+//            visibilityKm = 10,
+//            visibilityMiles = 6,
+//            uv = 5,
+//            gustMph = 0.0,
+//            gustKph = 0.0
+//
+//        )
+//        HomeWeatherScreen(
+//            location = previewLocation,
+//            currentWeather = previewWeather
+//        )
+//    }
+//}
 
 @Composable
 @Preview(showBackground = true)

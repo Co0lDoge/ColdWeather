@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dogiumlabs.coldweather.data.Weather
+import com.dogiumlabs.coldweather.data.weather.Weather
 import com.dogiumlabs.coldweather.data.WeatherRepository
 import kotlinx.coroutines.launch
 import retrofit2.HttpException

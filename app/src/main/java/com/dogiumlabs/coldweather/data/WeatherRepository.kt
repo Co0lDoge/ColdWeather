@@ -1,5 +1,7 @@
 package com.dogiumlabs.coldweather.data
 
+import com.dogiumlabs.coldweather.data.weather.Weather
+
 interface WeatherRepository {
     /** Interface for fetching data **/
     suspend fun getWeather(): Weather
