@@ -1,7 +1,6 @@
 package com.dogiumlabs.coldweather.ui.theme
 
 import android.app.Activity
-import android.graphics.Color.toArgb
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
