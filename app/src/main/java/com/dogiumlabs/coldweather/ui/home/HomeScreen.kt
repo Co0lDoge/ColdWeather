@@ -23,8 +23,10 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -47,6 +49,7 @@ import com.dogiumlabs.coldweather.data.weather.ForecastHour
 import com.dogiumlabs.coldweather.data.weather.Weather
 import com.dogiumlabs.coldweather.data.weather.getPreviewWeather
 import com.dogiumlabs.coldweather.ui.AppViewModelProvider
+import com.dogiumlabs.coldweather.ui.composable.ColdWeatherTopBar
 import com.dogiumlabs.coldweather.ui.theme.ColdWeatherTheme
 
 @Composable
@@ -89,55 +92,61 @@ fun HomeScreen(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeWeatherScreen(
     weather: Weather,
     timeFormatter: (String) -> String,
     modifier: Modifier = Modifier
 ) {
-    /** Screen that displays basic weather info **/
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-            .fillMaxSize()
-            .padding(20.dp)
-    ) {
-        Spacer(modifier = Modifier.weight(1f))
-        Text(
-            text = weather.location.name,
-            style = MaterialTheme.typography.titleLarge
-        )
-        Text(
-            text = weather.location.localTime,
-            style = MaterialTheme.typography.titleSmall
-        )
-        WeatherCard(weather.current)
-        Spacer(modifier = Modifier.weight(1f))
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(bottom = 16.dp)
+    Scaffold(
+        topBar = { ColdWeatherTopBar() }
+    ) { innerPadding ->
+        /** Screen that displays basic weather info **/
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(20.dp)
         ) {
+            Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = "Today",
-                style = MaterialTheme.typography.titleMedium
+                text = weather.location.name,
+                style = MaterialTheme.typography.titleLarge
             )
-            ClickableText(
-                onClick = { /** TODO **/ },
-                text = AnnotatedString("Next 7 Days >"),
-                style = MaterialTheme.typography.titleMedium.copy(color = LocalContentColor.current),
+            Text(
+                text = weather.location.localTime,
+                style = MaterialTheme.typography.titleSmall
+            )
+            WeatherCard(weather.current)
+            Spacer(modifier = Modifier.weight(1f))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(bottom = 16.dp)
+            ) {
+                Text(
+                    text = "Today",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                ClickableText(
+                    onClick = { /** TODO **/ },
+                    text = AnnotatedString("Next 7 Days >"),
+                    style = MaterialTheme.typography.titleMedium.copy(color = LocalContentColor.current),
+                )
+            }
+            WeatherScrollList(
+                forecastDay = weather.forecast.forecastDayList[0].forecastHourList,
+                timeFormatter = timeFormatter,
+                // Returns the first day of weather forecast
+                modifier = modifier
+                    .fillMaxWidth()
             )
         }
-        WeatherScrollList(
-            forecastDay = weather.forecast.forecastDayList[0].forecastHourList,
-            timeFormatter = timeFormatter,
-            // Returns the first day of weather forecast
-            modifier = modifier
-                .fillMaxWidth()
-        )
     }
 }
 
