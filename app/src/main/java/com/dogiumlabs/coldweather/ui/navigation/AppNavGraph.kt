@@ -19,13 +19,12 @@ fun AppNavGraph(
     modifier: Modifier = Modifier
 ) {
     var isDialogDisplayed by remember {
-        mutableStateOf(true)
+        mutableStateOf(false)
     }
 
     if (isDialogDisplayed) {
-        LocationDialog(onDismissRequest = {isDialogDisplayed = isDialogDisplayed})
+        LocationDialog(onDismissRequest = {isDialogDisplayed = !isDialogDisplayed})
     }
-
 
     /** Composable that manages screen navigation **/
     NavHost(
@@ -34,7 +33,7 @@ fun AppNavGraph(
         modifier = modifier
     ) {
         composable(route = HomeDestination.route) {
-            HomeScreen()
+            HomeScreen(onLocationButtonClick = { isDialogDisplayed = !isDialogDisplayed })
         }
     }
 }

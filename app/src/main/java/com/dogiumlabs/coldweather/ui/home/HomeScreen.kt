@@ -54,6 +54,7 @@ import com.dogiumlabs.coldweather.ui.theme.ColdWeatherTheme
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
+    onLocationButtonClick: () -> Unit,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
     /** Top level composable that displays content based on UiState's status **/
@@ -72,6 +73,7 @@ fun HomeScreen(
             HomeWeatherScreen(
                 weather = homeUiState.weather,
                 timeFormatter = viewModel::timeFormatter,
+                onLocationButtonClick = onLocationButtonClick,
                 modifier = modifier
             )
     }
@@ -95,10 +97,11 @@ fun HomeScreen(
 fun HomeWeatherScreen(
     weather: Weather,
     timeFormatter: (String) -> String,
+    onLocationButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     Scaffold(
-        topBar = { ColdWeatherTopBar() }
+        topBar = { ColdWeatherTopBar(onLocationButtonClick) }
     ) { innerPadding ->
         /** Screen that displays basic weather info **/
         Column(
@@ -394,7 +397,9 @@ fun HomeErrorScreen(modifier: Modifier = Modifier) {
 fun HomeScreenWeatherPreview() {
     ColdWeatherTheme {
         HomeWeatherScreen(
-            weather = getPreviewWeather(), timeFormatter = { inputString -> inputString }
+            weather = getPreviewWeather(),
+            timeFormatter = { inputString -> inputString },
+            onLocationButtonClick = {}
         )
     }
 }

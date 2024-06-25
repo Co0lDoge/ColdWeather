@@ -19,10 +19,12 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.dogiumlabs.coldweather.R
 import com.dogiumlabs.coldweather.ui.theme.ColdWeatherTheme
 
 @Composable
@@ -98,12 +100,12 @@ fun LocationDialogCard(
                     .fillMaxWidth()
                     .padding(4.dp)
             ) {
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Cancel")
+                Button(onClick = { onDismissRequest() }) {
+                    Text(text = stringResource(R.string.cancel))
                 }
                 Spacer(modifier = Modifier.padding(4.dp))
-                Button(onClick = { /*TODO*/ }) {
-                    Text(text = "Submit")
+                Button(onClick = { onDismissRequest() }) {
+                    Text(text = stringResource(R.string.submit))
                 }
             }
         }
