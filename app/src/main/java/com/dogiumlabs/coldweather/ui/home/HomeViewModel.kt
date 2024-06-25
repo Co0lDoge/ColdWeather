@@ -12,12 +12,14 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
+/** Interface that describes three possible states of UiState for HomeScreen **/
 sealed interface HomeUiState {
     data class Success(val weather: Weather) : HomeUiState
     data object Error : HomeUiState
     data object Loading : HomeUiState
 }
 
+/** Class that defines logic for HomeScreen **/
 class HomeViewModel(private val weatherRepository: WeatherRepository) : ViewModel() {
     var homeUiState: HomeUiState by mutableStateOf(HomeUiState.Loading)
         private set

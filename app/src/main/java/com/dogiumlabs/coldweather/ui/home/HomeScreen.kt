@@ -23,7 +23,6 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -49,7 +48,7 @@ import com.dogiumlabs.coldweather.data.weather.ForecastHour
 import com.dogiumlabs.coldweather.data.weather.Weather
 import com.dogiumlabs.coldweather.data.weather.getPreviewWeather
 import com.dogiumlabs.coldweather.ui.AppViewModelProvider
-import com.dogiumlabs.coldweather.ui.composable.ColdWeatherTopBar
+import com.dogiumlabs.coldweather.ui.components.ColdWeatherTopBar
 import com.dogiumlabs.coldweather.ui.theme.ColdWeatherTheme
 
 @Composable
@@ -92,7 +91,6 @@ fun HomeScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeWeatherScreen(
     weather: Weather,
