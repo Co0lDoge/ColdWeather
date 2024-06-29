@@ -18,13 +18,11 @@ fun AppNavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    var isDialogDisplayed by remember {
-        mutableStateOf(false)
-    }
+    var isDialogDisplayed by remember { mutableStateOf(false) }
 
-    if (isDialogDisplayed) {
+    // Load dialog to switch location when button is pressed
+    if (isDialogDisplayed)
         LocationDialog(onDismissRequest = {isDialogDisplayed = !isDialogDisplayed})
-    }
 
     /** Composable that manages screen navigation **/
     NavHost(
