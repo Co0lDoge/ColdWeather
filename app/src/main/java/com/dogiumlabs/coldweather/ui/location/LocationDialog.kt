@@ -37,6 +37,8 @@ fun LocationDialog(
 ) {
     val uiState: LocationUiState = viewModel.locationUiState
 
+    // When dropDown box is expanded, pressing outside will shrink dropDown box
+    // if pressed again dialog will be closed
     Dialog(onDismissRequest = {
         if (!uiState.isDialogExpanded) {
             viewModel.resetDialogState()
