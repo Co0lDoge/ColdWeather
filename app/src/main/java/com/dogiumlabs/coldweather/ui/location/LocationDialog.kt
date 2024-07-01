@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dogiumlabs.coldweather.R
+import com.dogiumlabs.coldweather.data.location.Candidate
 import com.dogiumlabs.coldweather.ui.AppViewModelProvider
 import com.dogiumlabs.coldweather.ui.theme.ColdWeatherTheme
 
@@ -36,22 +37,30 @@ fun LocationDialog(
 ) {
     val uiState: LocationUiState = viewModel.locationUiState
 
-    Dialog(onDismissRequest = { onDismissRequest() }) {
+    Dialog(onDismissRequest = {
+        if (!uiState.isDialogExpanded) onDismissRequest()
+        else viewModel.shrinkDialog()
+    }) {
         LocationDialogCard(
-            locationUiState = uiState,
+            isExpanded = uiState.isDialogExpanded,
+            inputText = uiState.dialogText,
             onTextChange = viewModel::changeText,
             onDismissRequest = onDismissRequest,
+            onCandidateClick = viewModel::selectCity,
+            candidates = uiState.candidates,
             modifier = modifier
         )
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LocationDialogCard(
-    locationUiState: LocationUiState,
+    isExpanded: Boolean,
+    inputText: String,
     onTextChange: (String) -> Unit,
     onDismissRequest: () -> Unit,
+    onCandidateClick: (String) -> Unit,
+    candidates: List<Candidate>,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -68,33 +77,13 @@ fun LocationDialogCard(
                 .fillMaxSize()
                 .padding(16.dp)
         ) {
-            Text(text = "Select City")
-            ExposedDropdownMenuBox(
-                expanded = locationUiState.isExpanded,
-                onExpandedChange = { /* TODO */ }
-            ) {
-                TextField(
-                    value = locationUiState.text,
-                    onValueChange = {
-                        onTextChange(it)
-                    },
-                    readOnly = false,
-                    modifier = Modifier.menuAnchor()
-                )
-                ExposedDropdownMenu(
-                    expanded = locationUiState.isExpanded,
-                    onDismissRequest = { onDismissRequest() }
-                ) {
-                    DropdownMenuItem(
-                        text = { Text(text = "one") },
-                        onClick = { /*TODO*/ }
-                    )
-                    DropdownMenuItem(
-                        text = { Text(text = "two") },
-                        onClick = { /*TODO*/ }
-                    )
-                }
-            }
+            DialogDropdownBox(
+                isExpanded = isExpanded,
+                inputText = inputText,
+                onTextChange = onTextChange,
+                onCandidateClick = onCandidateClick,
+                candidates = candidates
+            )
             Row(
                 horizontalArrangement = Arrangement.End,
                 modifier = Modifier
@@ -113,10 +102,56 @@ fun LocationDialogCard(
     }
 }
 
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun DialogDropdownBox(
+    isExpanded: Boolean,
+    inputText: String,
+    onTextChange: (String) -> Unit,
+    onCandidateClick: (String) -> Unit,
+    candidates: List<Candidate>,
+    modifier: Modifier = Modifier
+) {
+    ExposedDropdownMenuBox(
+        expanded = isExpanded,
+        onExpandedChange = { /* TODO */ },
+        modifier = modifier
+    ) {
+        TextField(
+            placeholder = { Text(text = "Select city")},
+            value = inputText,
+            onValueChange = {
+                onTextChange(it)
+            },
+            readOnly = false,
+            modifier = Modifier.menuAnchor()
+        )
+        ExposedDropdownMenu(
+            expanded = isExpanded,
+            onDismissRequest = { /* Works fine without it */ }
+        ) {
+            candidates.forEach { candidate ->
+                DropdownMenuItem(
+                    text = { Text(text = candidate.formattedAddress) },
+                    onClick = { onCandidateClick(candidate.name) }
+                )
+            }
+        }
+    }
+}
+
+
 @Composable
 @Preview
 fun LocationDialogPreview() {
     ColdWeatherTheme {
-        LocationDialog(onDismissRequest = {})
+        LocationDialogCard(
+            candidates = listOf(),
+            onTextChange = {},
+            onDismissRequest = {},
+            onCandidateClick = {""},
+            isExpanded = false,
+            inputText = "",
+        )
     }
 }

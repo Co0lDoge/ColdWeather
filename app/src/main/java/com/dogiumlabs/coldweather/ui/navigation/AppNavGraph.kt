@@ -22,7 +22,7 @@ fun AppNavGraph(
 
     // Load dialog to switch location when button is pressed
     if (isDialogDisplayed)
-        LocationDialog(onDismissRequest = {isDialogDisplayed = !isDialogDisplayed})
+        LocationDialog(onDismissRequest = { isDialogDisplayed = !isDialogDisplayed })
 
     /** Composable that manages screen navigation **/
     NavHost(
