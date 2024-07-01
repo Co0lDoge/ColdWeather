@@ -38,14 +38,20 @@ fun LocationDialog(
     val uiState: LocationUiState = viewModel.locationUiState
 
     Dialog(onDismissRequest = {
-        if (!uiState.isDialogExpanded) onDismissRequest()
+        if (!uiState.isDialogExpanded) {
+            viewModel.resetDialogState()
+            onDismissRequest()
+        }
         else viewModel.shrinkDialog()
     }) {
         LocationDialogCard(
             isExpanded = uiState.isDialogExpanded,
             inputText = uiState.dialogText,
             onTextChange = viewModel::changeText,
-            onDismissRequest = onDismissRequest,
+            onDismissRequest = {
+                viewModel.resetDialogState()
+                onDismissRequest()
+            },
             onCandidateClick = viewModel::selectCity,
             candidates = uiState.candidates,
             modifier = modifier
@@ -118,7 +124,7 @@ fun DialogDropdownBox(
         modifier = modifier
     ) {
         TextField(
-            placeholder = { Text(text = "Select city")},
+            placeholder = { Text(text = "Select city") },
             value = inputText,
             onValueChange = {
                 onTextChange(it)
@@ -149,7 +155,7 @@ fun LocationDialogPreview() {
             candidates = listOf(),
             onTextChange = {},
             onDismissRequest = {},
-            onCandidateClick = {""},
+            onCandidateClick = { "" },
             isExpanded = false,
             inputText = "",
         )

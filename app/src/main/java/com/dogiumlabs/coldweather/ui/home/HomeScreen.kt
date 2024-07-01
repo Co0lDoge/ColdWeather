@@ -43,9 +43,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.dogiumlabs.coldweather.R
-import com.dogiumlabs.coldweather.data.weather.WeatherCurrent
 import com.dogiumlabs.coldweather.data.weather.ForecastHour
 import com.dogiumlabs.coldweather.data.weather.Weather
+import com.dogiumlabs.coldweather.data.weather.WeatherCurrent
 import com.dogiumlabs.coldweather.data.weather.getPreviewWeather
 import com.dogiumlabs.coldweather.ui.AppViewModelProvider
 import com.dogiumlabs.coldweather.ui.components.ColdWeatherTopBar

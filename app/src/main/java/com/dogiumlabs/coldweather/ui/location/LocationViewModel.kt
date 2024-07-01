@@ -58,7 +58,7 @@ class LocationViewModel(private val locationRepository: LocationRepository) : Vi
             isDialogExpanded = true,
             dialogText = text,
 
-        )
+            )
     }
 
     fun selectCity(city: String) {
@@ -77,5 +77,13 @@ class LocationViewModel(private val locationRepository: LocationRepository) : Vi
 
     fun updateCity(text: String) {
         // TODO: Change selected city when DropDownItem is clicked
+    }
+
+    fun resetDialogState() {
+        /** Resets state of LocationDialog when dialog is closed **/
+        locationUiState = locationUiState.copy(
+            isDialogExpanded = false,
+            dialogText = "",
+        )
     }
 }
