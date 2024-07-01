@@ -6,6 +6,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.dogiumlabs.coldweather.ColdWeatherApplication
 import com.dogiumlabs.coldweather.ui.home.HomeViewModel
+import com.dogiumlabs.coldweather.ui.location.LocationViewModel
 
 object AppViewModelProvider {
     /** Provides Factory to create instance of ViewModel**/
@@ -14,6 +15,11 @@ object AppViewModelProvider {
         initializer {
             val weatherRepository = coldWeatherApplication().container.weatherRepository
             HomeViewModel(weatherRepository = weatherRepository)
+        }
+        // initializer for LocationViewModel
+        initializer {
+            val locationRepository = coldWeatherApplication().container.locationRepository
+            LocationViewModel(locationRepository = locationRepository)
         }
     }
 }

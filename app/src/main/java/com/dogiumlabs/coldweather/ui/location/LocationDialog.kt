@@ -25,13 +25,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dogiumlabs.coldweather.R
+import com.dogiumlabs.coldweather.ui.AppViewModelProvider
 import com.dogiumlabs.coldweather.ui.theme.ColdWeatherTheme
 
 @Composable
 fun LocationDialog(
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: LocationViewModel = viewModel(),
+    viewModel: LocationViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
     val uiState: LocationUiState = viewModel.locationUiState
 
