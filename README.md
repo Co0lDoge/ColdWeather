@@ -12,7 +12,7 @@ Planned features:
 - Forecast for a week
 - Ability to select city
 
-App built using data from www.weatherapi.com implemented using dependency injection, so adding new data sources should be revalably easy (may require adapters to display via existing composables).
+App built using data from www.weatherapi.com implemented using dependency injection, so adding new data sources should be relatively easy.
 
 
 | Phone Image |
