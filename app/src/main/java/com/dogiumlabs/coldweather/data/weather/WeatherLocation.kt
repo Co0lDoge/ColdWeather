@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Location(
+data class WeatherLocation(
     /** Weather's location data **/
     val name: String,
     val region: String,
@@ -16,7 +16,7 @@ data class Location(
     @SerializedName("localtime") val localTime: String
 )
 
-fun getPreviewLocation() = Location(
+fun getPreviewLocation() = WeatherLocation(
     "City Name",
     "Region Name",
     "Country Name",

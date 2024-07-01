@@ -4,14 +4,14 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Current(
+data class WeatherCurrent(
     /** Current weather data **/
     @SerializedName("last_updated_epoch") val lastUpdatedEpoch: Long,
     @SerializedName("last_updated") val lastUpdated: String,
     @SerializedName("temp_c") val tempC: Double,
     @SerializedName("temp_f") val tempF: Double,
     @SerializedName("is_day") val isDay: Byte,
-    val condition: Condition,
+    val condition: WeatherCondition,
 
     @SerializedName("wind_mph") val windMph: Double,
     @SerializedName("wind_kph") val windKph: Double,
@@ -39,14 +39,14 @@ data class Current(
 )
 
 @Serializable
-data class Condition(
+data class WeatherCondition(
     val text: String,
     val icon: String,
     val code: Int
 )
 
-fun getPreviewCondition() = Condition("Sunny", "icon url", 1000)
-fun getPreviewCurrent() = Current(
+fun getPreviewCondition() = WeatherCondition("Sunny", "icon url", 1000)
+fun getPreviewCurrent() = WeatherCurrent(
     lastUpdatedEpoch = 20,
     lastUpdated = "time",
     tempC = 20.0,

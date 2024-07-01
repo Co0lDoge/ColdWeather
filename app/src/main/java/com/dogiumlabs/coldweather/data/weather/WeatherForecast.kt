@@ -4,7 +4,7 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Forecast(
+data class WeatherForecast(
     @SerializedName("forecastday") val forecastDayList: List<ForecastDay>
 )
 
@@ -18,11 +18,11 @@ data class ForecastHour(
     val time: String,
     @SerializedName("temp_c") val tempC: Double,
     @SerializedName("temp_f") val tempF: Double,
-    val condition: Condition,
+    val condition: WeatherCondition,
 )
 
 
-fun getPreviewForecast() = Forecast(
+fun getPreviewForecast() = WeatherForecast(
     listOf(
         ForecastDay(
             listOf(

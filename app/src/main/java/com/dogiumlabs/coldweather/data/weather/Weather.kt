@@ -4,9 +4,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Weather(
-    val location: Location,
-    val current: Current,
-    val forecast: Forecast,
+    val location: WeatherLocation,
+    val current: WeatherCurrent,
+    val forecast: WeatherForecast,
 )
 
 

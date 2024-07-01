@@ -1,4 +1,4 @@
-package com.dogiumlabs.coldweather.data
+package com.dogiumlabs.coldweather.network.weather
 
 import com.dogiumlabs.coldweather.data.weather.Weather
 import retrofit2.http.GET

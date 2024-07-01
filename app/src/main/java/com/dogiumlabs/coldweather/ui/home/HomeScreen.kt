@@ -43,7 +43,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.dogiumlabs.coldweather.R
-import com.dogiumlabs.coldweather.data.weather.Current
+import com.dogiumlabs.coldweather.data.weather.WeatherCurrent
 import com.dogiumlabs.coldweather.data.weather.ForecastHour
 import com.dogiumlabs.coldweather.data.weather.Weather
 import com.dogiumlabs.coldweather.data.weather.getPreviewWeather
@@ -153,7 +153,7 @@ fun HomeWeatherScreen(
 
 @Composable
 fun WeatherCard(
-    currentWeather: Current,
+    currentWeather: WeatherCurrent,
     modifier: Modifier = Modifier
 ) {
     /** Card in the center of the screen **/
@@ -197,7 +197,7 @@ fun WeatherCard(
 
 @Composable
 fun WeatherParametersTable(
-    currentWeather: Current,
+    currentWeather: WeatherCurrent,
     modifier: Modifier = Modifier
 ) {
     /** Table containing Precipitation, Wind Speed, Humidity **/

@@ -1,8 +1,10 @@
 package com.dogiumlabs.coldweather.data
 
+import com.dogiumlabs.coldweather.network.weather.WeatherApiRepository
+import com.dogiumlabs.coldweather.network.weather.WeatherApiService
+import com.dogiumlabs.coldweather.network.weather.WeatherRepository
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
-
 
 /** Dependency injection container **/
 interface AppContainer {
