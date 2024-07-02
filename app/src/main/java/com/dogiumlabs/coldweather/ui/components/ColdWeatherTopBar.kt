@@ -13,7 +13,7 @@ import androidx.compose.runtime.Composable
 @Composable
 fun ColdWeatherTopBar(
     onLocationButtonClick: () -> Unit,
-    onMenuButtonClick: () -> Unit = { /* TODO */},
+    onMenuButtonClick: () -> Unit = { /* TODO */ },
 ) {
     /** Top bar used in multiple screens **/
     CenterAlignedTopAppBar(

@@ -9,7 +9,7 @@ interface WeatherRepository {
 
 class WeatherApiRepository(
     private val weatherApiService: WeatherApiService
-): WeatherRepository {
+) : WeatherRepository {
     /** Implementation that fetches data from WeatherApi **/
     override suspend fun getWeather(): Weather =
         weatherApiService.getWeather()

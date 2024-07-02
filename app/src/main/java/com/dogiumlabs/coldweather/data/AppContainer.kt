@@ -15,7 +15,7 @@ interface AppContainer {
     val locationRepository: LocationRepository
 }
 
-class ColdWeatherAppContainer: AppContainer {
+class ColdWeatherAppContainer : AppContainer {
     /** Contains web service repositories currently in use **/
 
     // Dependency injection implementation of weather repository
