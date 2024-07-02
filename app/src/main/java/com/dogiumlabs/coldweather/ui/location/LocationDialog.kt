@@ -1,5 +1,6 @@
 package com.dogiumlabs.coldweather.ui.location
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -49,6 +50,7 @@ fun LocationDialog(
             isExpanded = uiState.isDialogExpanded,
             inputText = uiState.dialogText,
             onTextChange = viewModel::changeText,
+            onShrinkRequest = viewModel::shrinkDialog,
             onDismissRequest = {
                 viewModel.resetDialogState()
                 onDismissRequest()
@@ -65,6 +67,7 @@ fun LocationDialogCard(
     isExpanded: Boolean,
     inputText: String,
     onTextChange: (String) -> Unit,
+    onShrinkRequest: () -> Unit,
     onDismissRequest: () -> Unit,
     onCandidateClick: (String) -> Unit,
     candidates: List<Candidate>,
@@ -88,6 +91,7 @@ fun LocationDialogCard(
                 isExpanded = isExpanded,
                 inputText = inputText,
                 onTextChange = onTextChange,
+                onShrinkRequest = onShrinkRequest,
                 onCandidateClick = onCandidateClick,
                 candidates = candidates
             )
@@ -115,6 +119,7 @@ fun DialogDropdownBox(
     isExpanded: Boolean,
     inputText: String,
     onTextChange: (String) -> Unit,
+    onShrinkRequest: () -> Unit,
     onCandidateClick: (String) -> Unit,
     candidates: List<Candidate>,
     modifier: Modifier = Modifier
@@ -135,7 +140,7 @@ fun DialogDropdownBox(
         )
         ExposedDropdownMenu(
             expanded = isExpanded,
-            onDismissRequest = { /* Works fine without it */ }
+            onDismissRequest = onShrinkRequest
         ) {
             candidates.forEach { candidate ->
                 DropdownMenuItem(
@@ -155,6 +160,7 @@ fun LocationDialogPreview() {
         LocationDialogCard(
             candidates = listOf(),
             onTextChange = {},
+            onShrinkRequest = {},
             onDismissRequest = {},
             onCandidateClick = { _ -> /* Do nothing */ },
             isExpanded = false,
