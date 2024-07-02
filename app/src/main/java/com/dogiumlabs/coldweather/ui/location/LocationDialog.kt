@@ -55,7 +55,7 @@ fun LocationDialog(
                 onDismissRequest()
             },
             onCandidateClick = viewModel::selectCity,
-            candidates = uiState.candidates,
+            candidates = viewModel.candidatesState,
             modifier = modifier
         )
     }

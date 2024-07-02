@@ -1,5 +1,6 @@
 package com.dogiumlabs.coldweather.ui.location
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -15,51 +16,43 @@ import retrofit2.HttpException
 data class LocationUiState(
     val isDialogExpanded: Boolean = false,
     val dialogText: String = "",
-    val candidates: List<Candidate> = listOf()
 )
 
 /** Class that defines logic for LocationDialog  **/
 class LocationViewModel(private val locationRepository: LocationRepository) : ViewModel() {
+    // State of UI values
     var locationUiState by mutableStateOf(LocationUiState())
         private set
 
-    private fun updateCandidates(input: String) {
+    // State of list of candidates
+    var candidatesState by mutableStateOf(listOf<Candidate>())
+        private set
+
+    private fun getCandidates(input: String) {
         viewModelScope.launch {
-            locationUiState = try {
-                LocationUiState(
-                    isDialogExpanded = true,
-                    dialogText = input,
-                    candidates = locationRepository.getLocation(input).candidates
-                        // Filter only cities by locality type
-                        .filter { candidate ->
-                            candidate.types.contains("locality")
-                        }
-                )
+            candidatesState = try {
+                locationRepository.getLocation(input).candidates
+                    // Filter only cities by locality type
+                    .filter { candidate ->
+                        candidate.types.contains("locality")
+                    }
             } catch (e: IOException) {
-                LocationUiState(
-                    isDialogExpanded = false,
-                    dialogText = e.message.toString(),
-                    candidates = listOf()
-                )
+                listOf()
             } catch (e: HttpException) {
-                LocationUiState(
-                    isDialogExpanded = false,
-                    dialogText = e.message.toString(),
-                    candidates = listOf()
-                )
+                listOf()
             }
         }
+        Log.d("LocationDebug", "candidates: ${candidatesState}")
     }
 
     fun changeText(input: String) {
         /** Changes text in TextField and updates candidates when typed **/
         locationUiState = locationUiState.copy(
             isDialogExpanded = true,
-            dialogText = input
+            dialogText = input,
         )
 
-        // Update candidates when typed
-        updateCandidates(input)
+        getCandidates(input)
     }
 
     fun selectCity(cityName: String) {
