@@ -43,8 +43,7 @@ fun LocationDialog(
         if (!uiState.isDialogExpanded) {
             viewModel.resetDialogState()
             onDismissRequest()
-        }
-        else viewModel.shrinkDialog()
+        } else viewModel.shrinkDialog()
     }) {
         LocationDialogCard(
             isExpanded = uiState.isDialogExpanded,
@@ -140,7 +139,7 @@ fun DialogDropdownBox(
         ) {
             candidates.forEach { candidate ->
                 DropdownMenuItem(
-                    text = { Text(text = candidate.name) },
+                    text = { Text(text = "${candidate.name}, ${candidate.countryName}") },
                     onClick = { onCandidateClick(candidate.name) }
                 )
             }
@@ -157,7 +156,7 @@ fun LocationDialogPreview() {
             candidates = listOf(),
             onTextChange = {},
             onDismissRequest = {},
-            onCandidateClick = { "" },
+            onCandidateClick = { _ -> /* Do nothing */ },
             isExpanded = false,
             inputText = "",
         )

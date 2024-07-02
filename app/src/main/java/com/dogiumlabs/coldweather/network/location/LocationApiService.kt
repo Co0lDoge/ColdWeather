@@ -2,7 +2,6 @@ package com.dogiumlabs.coldweather.network.location
 
 import com.dogiumlabs.coldweather.data.location.Location
 import com.dogiumlabs.coldweather.network.GEONAMES_USERNAME
-import com.dogiumlabs.coldweather.network.GOOGLE_MAPS_API_KEY
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -12,8 +11,7 @@ interface LocationApiService {
     @GET("searchJSON")
     suspend fun getLocation(
         @Query("name_startsWith") input: String,
-        @Query("maxRows") maxRows: Int = 5,
+        @Query("maxRows") maxRows: Int = 5, // Limits number of object fetched from API
         @Query("username") key: String = GEONAMES_USERNAME,
-
     ): Location
 }

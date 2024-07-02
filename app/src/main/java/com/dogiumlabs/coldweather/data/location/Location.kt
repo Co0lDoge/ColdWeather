@@ -11,7 +11,8 @@ data class Location(
 @Serializable
 data class Candidate(
     @SerializedName("toponymName") val name: String,
-    @SerializedName("fclName") val type: String
+    @SerializedName("countryName") val countryName: String,
+    @SerializedName("fclName") val type: String,
 )
 
 

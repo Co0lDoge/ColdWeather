@@ -29,6 +29,7 @@ class LocationViewModel(private val locationRepository: LocationRepository) : Vi
         private set
 
     private fun getCandidates(input: String) {
+        /** Gets list of place's candidates from API **/
         viewModelScope.launch {
             try {
                 candidatesState = locationRepository.getLocation(input).candidates
@@ -67,6 +68,7 @@ class LocationViewModel(private val locationRepository: LocationRepository) : Vi
     }
 
     fun shrinkDialog() {
+        /** Shrinks dropdown menu **/
         locationUiState = locationUiState.copy(
             isDialogExpanded = false,
         )
