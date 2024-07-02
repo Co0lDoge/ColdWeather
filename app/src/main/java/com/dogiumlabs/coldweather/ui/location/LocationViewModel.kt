@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 import okio.IOException
 import retrofit2.HttpException
 
-
 /** Class that allows to hold state of LocationDialog **/
 data class LocationUiState(
     val isDialogExpanded: Boolean = false,
@@ -22,19 +21,19 @@ data class LocationUiState(
 /** Class that defines logic for LocationDialog  **/
 class LocationViewModel(private val locationRepository: LocationRepository) : ViewModel() {
     var locationUiState by mutableStateOf(LocationUiState())
+        private set
 
-    init {
-        getCitiesList()
-    }
-
-    private fun getCitiesList() {
-        /** Gets list of cities from api **/
+    private fun updateCandidates(input: String) {
         viewModelScope.launch {
             locationUiState = try {
                 LocationUiState(
-                    isDialogExpanded = false,
-                    dialogText = "",
-                    candidates = locationRepository.getLocation("Moscow").candidates
+                    isDialogExpanded = true,
+                    dialogText = input,
+                    candidates = locationRepository.getLocation(input).candidates
+                        // Filter only cities by locality type
+                        .filter { candidate ->
+                            candidate.types.contains("locality")
+                        }
                 )
             } catch (e: IOException) {
                 LocationUiState(
@@ -52,20 +51,18 @@ class LocationViewModel(private val locationRepository: LocationRepository) : Vi
         }
     }
 
-    fun changeText(text: String) {
-        /** Changes text in TextField when typed **/
-        locationUiState = locationUiState.copy(
-            isDialogExpanded = true,
-            dialogText = text,
+    fun changeText(input: String) {
+        /** Changes text in TextField and updates candidates when typed **/
 
-            )
+        // Update candidates when typed
+        updateCandidates(locationUiState.dialogText)
     }
 
-    fun selectCity(city: String) {
+    fun selectCity(cityName: String) {
         /** Copies the candidate's name when it's pressed in the drop-down menu **/
         locationUiState = locationUiState.copy(
             isDialogExpanded = false,
-            dialogText = city,
+            dialogText = cityName,
         )
     }
 
