@@ -122,7 +122,7 @@ fun DialogDropdownBox(
 ) {
     ExposedDropdownMenuBox(
         expanded = isExpanded,
-        onExpandedChange = { /* TODO */ },
+        onExpandedChange = { /* Works fine without it */ },
         modifier = modifier
     ) {
         TextField(

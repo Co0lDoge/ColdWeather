@@ -34,7 +34,7 @@ class LocationViewModel(private val locationRepository: LocationRepository) : Vi
                 LocationUiState(
                     isDialogExpanded = false,
                     dialogText = "",
-                    candidates = locationRepository.getLocation().candidates
+                    candidates = locationRepository.getLocation("Moscow").candidates
                 )
             } catch (e: IOException) {
                 LocationUiState(
