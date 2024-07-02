@@ -53,9 +53,13 @@ class LocationViewModel(private val locationRepository: LocationRepository) : Vi
 
     fun changeText(input: String) {
         /** Changes text in TextField and updates candidates when typed **/
+        locationUiState = locationUiState.copy(
+            isDialogExpanded = true,
+            dialogText = input
+        )
 
         // Update candidates when typed
-        updateCandidates(locationUiState.dialogText)
+        updateCandidates(input)
     }
 
     fun selectCity(cityName: String) {
