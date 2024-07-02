@@ -140,7 +140,7 @@ fun DialogDropdownBox(
         ) {
             candidates.forEach { candidate ->
                 DropdownMenuItem(
-                    text = { Text(text = candidate.formattedAddress) },
+                    text = { Text(text = candidate.name) },
                     onClick = { onCandidateClick(candidate.name) }
                 )
             }

@@ -49,7 +49,7 @@ fun getWeatherRetrofitService(): WeatherApiService {
 
 fun getLocationRetrofitService(): LocationApiService {
     // Path to the weather server
-    val baseUrl = "https://maps.googleapis.com/maps/"
+    val baseUrl = "https://secure.geonames.org/"
 
     // Retrofit with serialization converter
     val retrofit: Retrofit = Retrofit.Builder()

@@ -30,19 +30,22 @@ class LocationViewModel(private val locationRepository: LocationRepository) : Vi
 
     private fun getCandidates(input: String) {
         viewModelScope.launch {
-            candidatesState = try {
-                locationRepository.getLocation(input).candidates
+            try {
+                candidatesState = locationRepository.getLocation(input).candidates
                     // Filter only cities by locality type
                     .filter { candidate ->
-                        candidate.types.contains("locality")
+                        candidate.type.contains("city")
                     }
+                Log.d("LocationDebug", "candidates fetched: ${candidatesState}")
             } catch (e: IOException) {
-                listOf()
+                candidatesState = listOf()
+                Log.e("LocationDebug", e.message.toString())
             } catch (e: HttpException) {
-                listOf()
+                listOf("LocationDebug")
+                Log.e("LocationDebug", e.message())
             }
         }
-        Log.d("LocationDebug", "candidates: ${candidatesState}")
+
     }
 
     fun changeText(input: String) {

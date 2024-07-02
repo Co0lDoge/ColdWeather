@@ -5,14 +5,13 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class Location(
-    val candidates: List<Candidate>
+    @SerializedName("geonames") val candidates: List<Candidate>
 )
 
 @Serializable
 data class Candidate(
-    @SerializedName("formatted_address") val formattedAddress: String,
-    val name: String,
-    val types: List<String>
+    @SerializedName("toponymName") val name: String,
+    @SerializedName("fclName") val type: String
 )
 
 
