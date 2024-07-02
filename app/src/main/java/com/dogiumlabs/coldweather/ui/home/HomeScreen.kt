@@ -110,7 +110,11 @@ fun HomeWeatherScreen(
             modifier = modifier
                 .fillMaxSize()
                 .padding(innerPadding)
-                .padding(20.dp)
+                .padding(
+                    start = 20.dp,
+                    end = 20.dp,
+                    bottom = 20.dp
+                )
         ) {
             Spacer(modifier = Modifier.weight(1f))
             Text(
@@ -128,7 +132,10 @@ fun HomeWeatherScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(bottom = 16.dp)
+                    .padding(
+                        top = 16.dp,
+                        bottom = 12.dp
+                    )
             ) {
                 Text(
                     text = "Today",
@@ -176,8 +183,8 @@ fun WeatherCard(
                 contentDescription = currentWeather.condition.text,
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
-                    .height(256.dp)
-                    .width(256.dp)
+                    .height(224.dp)
+                    .width(224.dp)
             )
             Text(
                 text = currentWeather.condition.text,
