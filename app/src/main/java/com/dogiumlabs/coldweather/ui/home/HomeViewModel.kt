@@ -1,6 +1,7 @@
 package com.dogiumlabs.coldweather.ui.home
 
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -31,12 +32,15 @@ class HomeViewModel(private val weatherRepository: WeatherRepository) : ViewMode
     private fun getWeatherState() {
         /** Gets weather from Weather Api retrofit service and updates Ui State**/
         viewModelScope.launch {
-            homeUiState = try {
-                HomeUiState.Success(weather = weatherRepository.getWeather())
+            try {
+                homeUiState = HomeUiState.Success(weather = weatherRepository.getWeather())
+                Log.d("WeatherDebug", "Weather fetched successfully")
             } catch (e: IOException) {
-                HomeUiState.Error
+                homeUiState = HomeUiState.Error
+                Log.d("WeatherDebug", e.message.toString())
             } catch (e: HttpException) {
-                HomeUiState.Error
+                homeUiState = HomeUiState.Error
+                Log.d("WeatherDebug", e.message())
             }
         }
     }

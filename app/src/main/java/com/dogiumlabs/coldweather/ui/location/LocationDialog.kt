@@ -138,7 +138,7 @@ fun DialogDropdownBox(
             modifier = Modifier.menuAnchor()
         )
         ExposedDropdownMenu(
-            expanded = isExpanded,
+            expanded = (isExpanded and candidates.isNotEmpty()),
             onDismissRequest = onShrinkRequest
         ) {
             candidates.forEach { candidate ->
