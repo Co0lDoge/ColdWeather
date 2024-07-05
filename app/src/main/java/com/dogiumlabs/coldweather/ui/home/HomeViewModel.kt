@@ -1,40 +1,57 @@
 package com.dogiumlabs.coldweather.ui.home
 
 
+import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dogiumlabs.coldweather.data.location.SavedLocation
+import com.dogiumlabs.coldweather.data.location.SavedLocationRepository
 import com.dogiumlabs.coldweather.data.weather.Weather
-import com.dogiumlabs.coldweather.data.WeatherRepository
+import com.dogiumlabs.coldweather.network.weather.WeatherRepository
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
 
+/** Interface that describes three possible states of UiState for HomeScreen **/
 sealed interface HomeUiState {
     data class Success(val weather: Weather) : HomeUiState
     data object Error : HomeUiState
     data object Loading : HomeUiState
 }
 
-class HomeViewModel(private val weatherRepository: WeatherRepository) : ViewModel() {
+/** Class that defines logic for HomeScreen **/
+class HomeViewModel(
+    private val weatherRepository: WeatherRepository,
+    private val savedLocationRepository: SavedLocationRepository
+) : ViewModel() {
     var homeUiState: HomeUiState by mutableStateOf(HomeUiState.Loading)
         private set
 
     init {
-        getWeatherState()
+        updateWeatherState()
     }
 
-    private fun getWeatherState() {
+    fun updateWeatherState() {
         /** Gets weather from Weather Api retrofit service and updates Ui State**/
         viewModelScope.launch {
-            homeUiState = try {
-                HomeUiState.Success(weather = weatherRepository.getWeather())
+            // TODO: Replace with check for existing location
+            savedLocationRepository.insertLocation(SavedLocation(1, "London"))
+            val location = savedLocationRepository.getLocationStream(1).first().name
+            try {
+                homeUiState = HomeUiState.Success(
+                    weather = weatherRepository.getWeather(location)
+                )
+                Log.d("WeatherDebug", "Weather fetched successfully")
             } catch (e: IOException) {
-                HomeUiState.Error
+                homeUiState = HomeUiState.Error
+                Log.d("WeatherDebug", e.message.toString())
             } catch (e: HttpException) {
-                HomeUiState.Error
+                homeUiState = HomeUiState.Error
+                Log.d("WeatherDebug", e.message())
             }
         }
     }

@@ -4,14 +4,14 @@ import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class Current(
+data class WeatherCurrent(
     /** Current weather data **/
     @SerializedName("last_updated_epoch") val lastUpdatedEpoch: Long,
     @SerializedName("last_updated") val lastUpdated: String,
     @SerializedName("temp_c") val tempC: Double,
     @SerializedName("temp_f") val tempF: Double,
     @SerializedName("is_day") val isDay: Byte,
-    val condition: Condition,
+    val condition: WeatherCondition,
 
     @SerializedName("wind_mph") val windMph: Double,
     @SerializedName("wind_kph") val windKph: Double,
@@ -39,8 +39,41 @@ data class Current(
 )
 
 @Serializable
-data class Condition(
+data class WeatherCondition(
     val text: String,
     val icon: String,
     val code: Int
+)
+
+fun getPreviewCondition() = WeatherCondition("Sunny", "icon url", 1000)
+fun getPreviewCurrent() = WeatherCurrent(
+    lastUpdatedEpoch = 20,
+    lastUpdated = "time",
+    tempC = 20.0,
+    tempF = 20.0,
+    isDay = 1,
+    condition = getPreviewCondition(),
+    windMph = 0.0,
+    windKph = 0.0,
+    windDegree = 0,
+    windDirection = "N",
+    pressureMb = 1013,
+    pressureIn = 29.92,
+    precipMm = 0.0,
+    precipIn = 0.0,
+    humidity = 50,
+    cloud = 20,
+    feelsLikeCelsius = 19.5,
+    feelsLikeFahrenheit = 67.1,
+    windChillCelsius = 18.0,
+    windChillFahrenheit = 64.4,
+    heatIndexCelsius = 22.0,
+    heatIndexFahrenheit = 71.6,
+    dewPointCelsius = 15.0,
+    dewPointFahrenheit = 59.0,
+    visibilityKm = 10,
+    visibilityMiles = 6,
+    uv = 5,
+    gustMph = 0.0,
+    gustKph = 0.0
 )

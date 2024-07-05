@@ -23,9 +23,15 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Card
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -41,10 +47,13 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.dogiumlabs.coldweather.R
-import com.dogiumlabs.coldweather.data.weather.Current
 import com.dogiumlabs.coldweather.data.weather.ForecastHour
 import com.dogiumlabs.coldweather.data.weather.Weather
+import com.dogiumlabs.coldweather.data.weather.WeatherCurrent
+import com.dogiumlabs.coldweather.data.weather.getPreviewWeather
 import com.dogiumlabs.coldweather.ui.AppViewModelProvider
+import com.dogiumlabs.coldweather.ui.components.ColdWeatherTopBar
+import com.dogiumlabs.coldweather.ui.location.LocationDialog
 import com.dogiumlabs.coldweather.ui.theme.ColdWeatherTheme
 
 @Composable
@@ -52,6 +61,15 @@ fun HomeScreen(
     modifier: Modifier = Modifier,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    var isDialogDisplayed by remember { mutableStateOf(false) }
+
+    // Load dialog to switch location when button is pressed
+    if (isDialogDisplayed)
+        LocationDialog(
+            onSubmit = viewModel::updateWeatherState,
+            onDismissRequest = { isDialogDisplayed = !isDialogDisplayed }
+        )
+
     /** Top level composable that displays content based on UiState's status **/
     val homeUiState = viewModel.homeUiState
     AnimatedVisibility(
@@ -68,6 +86,9 @@ fun HomeScreen(
             HomeWeatherScreen(
                 weather = homeUiState.weather,
                 timeFormatter = viewModel::timeFormatter,
+                onLocationButtonClick = {
+                    isDialogDisplayed = !isDialogDisplayed
+                },
                 modifier = modifier
             )
     }
@@ -91,56 +112,70 @@ fun HomeScreen(
 fun HomeWeatherScreen(
     weather: Weather,
     timeFormatter: (String) -> String,
+    onLocationButtonClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    /** Screen that displays basic weather info **/
-    Column(
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = modifier
-            .fillMaxSize()
-            .padding(20.dp)
-    ) {
-        Spacer(modifier = Modifier.weight(1f))
-        Text(
-            text = weather.location.name,
-            style = MaterialTheme.typography.titleLarge
-        )
-        Text(
-            text = weather.location.localTime,
-            style = MaterialTheme.typography.titleSmall
-        )
-        WeatherCard(weather.current)
-        Spacer(modifier = Modifier.weight(1f))
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier
-                .fillMaxWidth()
+    Scaffold(
+        topBar = { ColdWeatherTopBar(onLocationButtonClick) }
+    ) { innerPadding ->
+        /** Screen that displays basic weather info **/
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = modifier
+                .fillMaxSize()
+                .padding(innerPadding)
+                .padding(
+                    start = 20.dp,
+                    end = 20.dp,
+                    bottom = 20.dp
+                )
         ) {
+            Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = "Today",
-                style = MaterialTheme.typography.titleMedium
+                text = weather.location.name,
+                style = MaterialTheme.typography.titleLarge
             )
-            ClickableText(
-                onClick = { /** TODO **/ },
-                text = AnnotatedString("Next 7 Days >"),
-                style = MaterialTheme.typography.titleMedium
+            Text(
+                text = weather.location.localTime,
+                style = MaterialTheme.typography.titleSmall
+            )
+            WeatherCard(weather.current)
+            Spacer(modifier = Modifier.weight(1f))
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(
+                        top = 16.dp,
+                        bottom = 12.dp
+                    )
+            ) {
+                Text(
+                    text = "Today",
+                    style = MaterialTheme.typography.titleMedium
+                )
+                ClickableText(
+                    onClick = { /** TODO **/ },
+                    text = AnnotatedString("Next 7 Days >"),
+                    style = MaterialTheme.typography.titleMedium.copy(color = LocalContentColor.current),
+                )
+            }
+            WeatherScrollList(
+                forecastDay = weather.forecast.forecastDayList[0].forecastHourList,
+                timeFormatter = timeFormatter,
+                // Returns the first day of weather forecast
+                modifier = modifier
+                    .fillMaxWidth()
             )
         }
-        WeatherScrollList(
-            forecastDay = weather.forecast.forecastDayList[0].forecastHourList,
-            timeFormatter = timeFormatter,
-            // Returns the first day of weather forecast
-            modifier = modifier
-                .fillMaxWidth()
-        )
     }
 }
 
 @Composable
 fun WeatherCard(
-    currentWeather: Current,
+    currentWeather: WeatherCurrent,
     modifier: Modifier = Modifier
 ) {
     /** Card in the center of the screen **/
@@ -163,8 +198,8 @@ fun WeatherCard(
                 contentDescription = currentWeather.condition.text,
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier
-                    .height(256.dp)
-                    .width(256.dp)
+                    .height(224.dp)
+                    .width(224.dp)
             )
             Text(
                 text = currentWeather.condition.text,
@@ -184,7 +219,7 @@ fun WeatherCard(
 
 @Composable
 fun WeatherParametersTable(
-    currentWeather: Current,
+    currentWeather: WeatherCurrent,
     modifier: Modifier = Modifier
 ) {
     /** Table containing Precipitation, Wind Speed, Humidity **/
@@ -379,58 +414,17 @@ fun HomeErrorScreen(modifier: Modifier = Modifier) {
     }
 }
 
-//@Composable
-//@Preview(showBackground = true)
-//fun HomeScreenWeatherPreview() {
-//    ColdWeatherTheme {
-//        val previewLocation = Location(
-//            "City Name",
-//            "Region Name",
-//            "Country Name",
-//            20.0,
-//            20.0,
-//            "Timezone Id",
-//            20,
-//            "2001-03-21 15.30"
-//        )
-//        val previewWeather = Current(
-//            lastUpdatedEpoch = 20,
-//            lastUpdated = "time",
-//            tempC = 20.0,
-//            tempF = 20.0,
-//            isDay = 1,
-//            condition = Condition("Sunny", "icon url", 1000),
-//            windMph = 0.0,
-//            windKph = 0.0,
-//            windDegree = 0,
-//            windDirection = "N",
-//            pressureMb = 1013,
-//            pressureIn = 29.92,
-//            precipMm = 0.0,
-//            precipIn = 0.0,
-//            humidity = 50,
-//            cloud = 20,
-//            feelsLikeCelsius = 19.5,
-//            feelsLikeFahrenheit = 67.1,
-//            windChillCelsius = 18.0,
-//            windChillFahrenheit = 64.4,
-//            heatIndexCelsius = 22.0,
-//            heatIndexFahrenheit = 71.6,
-//            dewPointCelsius = 15.0,
-//            dewPointFahrenheit = 59.0,
-//            visibilityKm = 10,
-//            visibilityMiles = 6,
-//            uv = 5,
-//            gustMph = 0.0,
-//            gustKph = 0.0
-//
-//        )
-//        HomeWeatherScreen(
-//            location = previewLocation,
-//            currentWeather = previewWeather
-//        )
-//    }
-//}
+@Composable
+@Preview(showBackground = true)
+fun HomeScreenWeatherPreview() {
+    ColdWeatherTheme {
+        HomeWeatherScreen(
+            weather = getPreviewWeather(),
+            timeFormatter = { inputString -> inputString },
+            onLocationButtonClick = {}
+        )
+    }
+}
 
 @Composable
 @Preview(showBackground = true)
