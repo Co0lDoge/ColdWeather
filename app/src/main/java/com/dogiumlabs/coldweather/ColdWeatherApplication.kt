@@ -10,6 +10,6 @@ class ColdWeatherApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        container = ColdWeatherAppContainer()
+        container = ColdWeatherAppContainer(this)
     }
 }

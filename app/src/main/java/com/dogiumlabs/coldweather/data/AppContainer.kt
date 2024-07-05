@@ -1,5 +1,9 @@
 package com.dogiumlabs.coldweather.data
 
+import android.content.Context
+import com.dogiumlabs.coldweather.data.location.LocalSavedLocationRepository
+import com.dogiumlabs.coldweather.data.location.SavedLocationDatabase
+import com.dogiumlabs.coldweather.data.location.SavedLocationRepository
 import com.dogiumlabs.coldweather.network.location.LocationApiRepository
 import com.dogiumlabs.coldweather.network.location.LocationApiService
 import com.dogiumlabs.coldweather.network.location.LocationRepository
@@ -13,13 +17,14 @@ import retrofit2.converter.gson.GsonConverterFactory
 interface AppContainer {
     val weatherRepository: WeatherRepository
     val locationRepository: LocationRepository
+    val savedLocationRepository: SavedLocationRepository
 }
 
 /** URLs of currently used web services **/
 const val WEATHER_BASE_URL = "https://api.weatherapi.com/v1/"
 const val LOCATION_BASE_URL = "https://secure.geonames.org/"
 
-class ColdWeatherAppContainer : AppContainer {
+class ColdWeatherAppContainer(private val context: Context) : AppContainer {
     /** Contains web service repositories currently in use **/
 
     // Dependency injection implementation of weather repository
@@ -30,6 +35,9 @@ class ColdWeatherAppContainer : AppContainer {
     // Dependency injection implementation of location repository
     override val locationRepository: LocationRepository by lazy {
         LocationApiRepository(getLocationRetrofitService())
+    }
+    override val savedLocationRepository: SavedLocationRepository by lazy {
+        LocalSavedLocationRepository(savedLocationDao = SavedLocationDatabase.getDatabase(context).savedLocationDao())
     }
 }
 
