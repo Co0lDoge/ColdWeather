@@ -11,7 +11,7 @@ interface WeatherApiService {
     @GET("forecast.json")
     suspend fun getWeather(
         // TODO: Replace London with selectable city
-        @Query("q") query: String = "London",
+        @Query("q") query: String,
         @Query("key") key: String = WEATHER_API_KEY,
     ): Weather
 }

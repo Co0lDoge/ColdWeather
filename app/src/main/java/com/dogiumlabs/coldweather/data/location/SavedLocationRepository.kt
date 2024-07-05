@@ -17,7 +17,7 @@ interface SavedLocationRepository {
     fun getAllLocationsStream(): Flow<List<SavedLocation>>
 
     // Retrieve an location from the given data source that matches with the [id].
-    fun getLocationStream(id: Int): Flow<SavedLocation?>
+    fun getLocationStream(id: Int): Flow<SavedLocation>
 }
 
 /** Implementation that provides access to local SavedLocationDatabase **/
@@ -36,6 +36,6 @@ class LocalSavedLocationRepository(
     override fun getAllLocationsStream(): Flow<List<SavedLocation>> =
         savedLocationDao.getAllItems()
 
-    override fun getLocationStream(id: Int): Flow<SavedLocation?> =
+    override fun getLocationStream(id: Int): Flow<SavedLocation> =
         savedLocationDao.getLocation(id)
 }

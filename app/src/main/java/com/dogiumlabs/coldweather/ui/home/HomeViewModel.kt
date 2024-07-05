@@ -7,8 +7,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dogiumlabs.coldweather.data.location.SavedLocationRepository
 import com.dogiumlabs.coldweather.data.weather.Weather
 import com.dogiumlabs.coldweather.network.weather.WeatherRepository
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
 import java.io.IOException
@@ -21,7 +23,10 @@ sealed interface HomeUiState {
 }
 
 /** Class that defines logic for HomeScreen **/
-class HomeViewModel(private val weatherRepository: WeatherRepository) : ViewModel() {
+class HomeViewModel(
+    private val weatherRepository: WeatherRepository,
+    private val savedLocationRepository: SavedLocationRepository
+) : ViewModel() {
     var homeUiState: HomeUiState by mutableStateOf(HomeUiState.Loading)
         private set
 
@@ -32,8 +37,11 @@ class HomeViewModel(private val weatherRepository: WeatherRepository) : ViewMode
     private fun getWeatherState() {
         /** Gets weather from Weather Api retrofit service and updates Ui State**/
         viewModelScope.launch {
+            val location = savedLocationRepository.getLocationStream(1).first().name
             try {
-                homeUiState = HomeUiState.Success(weather = weatherRepository.getWeather())
+                homeUiState = HomeUiState.Success(
+                    weather = weatherRepository.getWeather(location)
+                )
                 Log.d("WeatherDebug", "Weather fetched successfully")
             } catch (e: IOException) {
                 homeUiState = HomeUiState.Error

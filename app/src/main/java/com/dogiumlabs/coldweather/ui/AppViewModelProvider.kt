@@ -15,7 +15,10 @@ object AppViewModelProvider {
         initializer {
             val weatherRepository = coldWeatherApplication().container.weatherRepository
             val savedLocationRepository = coldWeatherApplication().container.savedLocationRepository
-            HomeViewModel(weatherRepository = weatherRepository)
+            HomeViewModel(
+                weatherRepository = weatherRepository,
+                savedLocationRepository = savedLocationRepository
+            )
         }
         // initializer for LocationViewModel
         initializer {
