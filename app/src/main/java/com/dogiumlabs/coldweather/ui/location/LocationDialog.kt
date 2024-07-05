@@ -25,7 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.dogiumlabs.coldweather.R
-import com.dogiumlabs.coldweather.data.location.Candidate
+import com.dogiumlabs.coldweather.data.location.Location
 import com.dogiumlabs.coldweather.ui.AppViewModelProvider
 import com.dogiumlabs.coldweather.ui.theme.ColdWeatherTheme
 
@@ -35,7 +35,7 @@ fun LocationDialog(
     modifier: Modifier = Modifier,
     viewModel: LocationViewModel = viewModel(factory = AppViewModelProvider.Factory),
 ) {
-    val uiState: LocationUiState = viewModel.locationUiState
+    val uiState: LocationUiState = viewModel.dialogUiState
 
     // When dropDown box is expanded, pressing outside will shrink dropDown box
     // if pressed again dialog will be closed
@@ -54,8 +54,8 @@ fun LocationDialog(
                 viewModel.resetDialogState()
                 onDismissRequest()
             },
-            onCandidateClick = viewModel::selectCity,
-            candidates = viewModel.candidatesState,
+            onLocationClick = viewModel::selectCity,
+            locations = viewModel.locationsState,
             modifier = modifier
         )
     }
@@ -68,8 +68,8 @@ fun LocationDialogCard(
     onTextChange: (String) -> Unit,
     onShrinkRequest: () -> Unit,
     onDismissRequest: () -> Unit,
-    onCandidateClick: (String) -> Unit,
-    candidates: List<Candidate>,
+    onLocationClick: (String) -> Unit,
+    locations: List<Location>,
     modifier: Modifier = Modifier
 ) {
     Card(
@@ -91,8 +91,8 @@ fun LocationDialogCard(
                 inputText = inputText,
                 onTextChange = onTextChange,
                 onShrinkRequest = onShrinkRequest,
-                onCandidateClick = onCandidateClick,
-                candidates = candidates
+                onLocationClick = onLocationClick,
+                locations = locations
             )
             Row(
                 horizontalArrangement = Arrangement.End,
@@ -119,8 +119,8 @@ fun DialogDropdownBox(
     inputText: String,
     onTextChange: (String) -> Unit,
     onShrinkRequest: () -> Unit,
-    onCandidateClick: (String) -> Unit,
-    candidates: List<Candidate>,
+    onLocationClick: (String) -> Unit,
+    locations: List<Location>,
     modifier: Modifier = Modifier
 ) {
     ExposedDropdownMenuBox(
@@ -138,13 +138,13 @@ fun DialogDropdownBox(
             modifier = Modifier.menuAnchor()
         )
         ExposedDropdownMenu(
-            expanded = (isExpanded and candidates.isNotEmpty()),
+            expanded = (isExpanded and locations.isNotEmpty()),
             onDismissRequest = onShrinkRequest
         ) {
-            candidates.forEach { candidate ->
+            locations.forEach { location ->
                 DropdownMenuItem(
-                    text = { Text(text = "${candidate.name}, ${candidate.countryName}") },
-                    onClick = { onCandidateClick(candidate.name) }
+                    text = { Text(text = "${location.name}, ${location.countryName}") },
+                    onClick = { onLocationClick(location.name) }
                 )
             }
         }
@@ -157,11 +157,11 @@ fun DialogDropdownBox(
 fun LocationDialogPreview() {
     ColdWeatherTheme {
         LocationDialogCard(
-            candidates = listOf(),
+            locations = listOf(),
             onTextChange = {},
             onShrinkRequest = {},
             onDismissRequest = {},
-            onCandidateClick = { _ -> /* Do nothing */ },
+            onLocationClick = { _ -> /* Do nothing */ },
             isExpanded = false,
             inputText = "",
         )

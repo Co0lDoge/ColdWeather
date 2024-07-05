@@ -6,7 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.dogiumlabs.coldweather.data.location.Candidate
+import com.dogiumlabs.coldweather.data.location.Location
 import com.dogiumlabs.coldweather.network.location.LocationRepository
 import kotlinx.coroutines.launch
 import okio.IOException
@@ -21,25 +21,25 @@ data class LocationUiState(
 /** Class that defines logic for LocationDialog  **/
 class LocationViewModel(private val locationRepository: LocationRepository) : ViewModel() {
     // State of UI values
-    var locationUiState by mutableStateOf(LocationUiState())
+    var dialogUiState by mutableStateOf(LocationUiState())
         private set
 
-    // State of list of candidates
-    var candidatesState by mutableStateOf(listOf<Candidate>())
+    // State of list of locations
+    var locationsState by mutableStateOf(listOf<Location>())
         private set
 
-    private fun getCandidates(input: String) {
-        /** Gets list of place's candidates from API **/
+    private fun getLocationList(input: String) {
+        /** Gets list of place's locations from API **/
         viewModelScope.launch {
             try {
-                candidatesState = locationRepository.getLocation(input).candidates
+                locationsState = locationRepository.getLocation(input).locations
                     // Filter only cities by locality type
-                    .filter { candidate ->
-                        candidate.type.contains("city")
+                    .filter { location ->
+                        location.type.contains("city")
                     }
-                Log.d("LocationDebug", "candidates fetched: ${candidatesState}")
+                Log.d("LocationDebug", "locations fetched: $locationsState")
             } catch (e: IOException) {
-                candidatesState = listOf()
+                locationsState = listOf()
                 Log.e("LocationDebug", e.message.toString())
             } catch (e: HttpException) {
                 listOf("LocationDebug")
@@ -50,18 +50,18 @@ class LocationViewModel(private val locationRepository: LocationRepository) : Vi
     }
 
     fun changeText(input: String) {
-        /** Changes text in TextField and updates candidates when typed **/
-        locationUiState = locationUiState.copy(
+        /** Changes text in TextField and updates locations when typed **/
+        dialogUiState = dialogUiState.copy(
             isDialogExpanded = true,
             dialogText = input,
         )
 
-        getCandidates(input)
+        getLocationList(input)
     }
 
     fun selectCity(cityName: String) {
-        /** Copies the candidate's name when it's pressed in the drop-down menu **/
-        locationUiState = locationUiState.copy(
+        /** Copies the location's name when it's pressed in the drop-down menu **/
+        dialogUiState = dialogUiState.copy(
             isDialogExpanded = false,
             dialogText = cityName,
         )
@@ -69,7 +69,7 @@ class LocationViewModel(private val locationRepository: LocationRepository) : Vi
 
     fun shrinkDialog() {
         /** Shrinks dropdown menu **/
-        locationUiState = locationUiState.copy(
+        dialogUiState = dialogUiState.copy(
             isDialogExpanded = false,
         )
     }
@@ -80,7 +80,7 @@ class LocationViewModel(private val locationRepository: LocationRepository) : Vi
 
     fun resetDialogState() {
         /** Resets state of LocationDialog when dialog is closed **/
-        locationUiState = locationUiState.copy(
+        dialogUiState = dialogUiState.copy(
             isDialogExpanded = false,
             dialogText = "",
         )

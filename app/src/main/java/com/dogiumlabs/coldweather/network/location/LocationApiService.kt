@@ -1,6 +1,6 @@
 package com.dogiumlabs.coldweather.network.location
 
-import com.dogiumlabs.coldweather.data.location.Location
+import com.dogiumlabs.coldweather.data.location.LocationsList
 import com.dogiumlabs.coldweather.network.GEONAMES_USERNAME
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -13,5 +13,5 @@ interface LocationApiService {
         @Query("name_startsWith") input: String,
         @Query("maxRows") maxRows: Int = 5, // Limits number of object fetched from API
         @Query("username") key: String = GEONAMES_USERNAME,
-    ): Location
+    ): LocationsList
 }
