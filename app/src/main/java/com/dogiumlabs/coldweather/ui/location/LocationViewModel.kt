@@ -32,7 +32,7 @@ class LocationViewModel(private val locationRepository: LocationRepository) : Vi
         /** Gets list of place's locations from API **/
         viewModelScope.launch {
             try {
-                locationsState = locationRepository.getLocation(input).locations
+                locationsState = locationRepository.getLocationList(input).locations
                     // Filter only cities by locality type
                     .filter { location ->
                         location.type.contains("city")
