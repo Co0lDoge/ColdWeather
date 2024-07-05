@@ -18,12 +18,6 @@ fun AppNavGraph(
     navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
-    var isDialogDisplayed by remember { mutableStateOf(false) }
-
-    // Load dialog to switch location when button is pressed
-    if (isDialogDisplayed)
-        LocationDialog(onDismissRequest = { isDialogDisplayed = !isDialogDisplayed })
-
     /** Composable that manages screen navigation **/
     NavHost(
         navController = navController,
@@ -31,7 +25,7 @@ fun AppNavGraph(
         modifier = modifier
     ) {
         composable(route = HomeDestination.route) {
-            HomeScreen(onLocationButtonClick = { isDialogDisplayed = !isDialogDisplayed })
+            HomeScreen()
         }
     }
 }

@@ -32,14 +32,15 @@ class HomeViewModel(
         private set
 
     init {
-        getWeatherState()
+        updateWeatherState()
     }
 
-    private fun getWeatherState() {
+    fun updateWeatherState() {
         /** Gets weather from Weather Api retrofit service and updates Ui State**/
         viewModelScope.launch {
-            val location = savedLocationRepository.getLocationStream(1).first().name
+            // TODO: Replace with check for existing location
             savedLocationRepository.insertLocation(SavedLocation(1, "London"))
+            val location = savedLocationRepository.getLocationStream(1).first().name
             try {
                 homeUiState = HomeUiState.Success(
                     weather = weatherRepository.getWeather(location)

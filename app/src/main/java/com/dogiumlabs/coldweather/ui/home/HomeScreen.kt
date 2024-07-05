@@ -28,6 +28,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -49,14 +53,23 @@ import com.dogiumlabs.coldweather.data.weather.WeatherCurrent
 import com.dogiumlabs.coldweather.data.weather.getPreviewWeather
 import com.dogiumlabs.coldweather.ui.AppViewModelProvider
 import com.dogiumlabs.coldweather.ui.components.ColdWeatherTopBar
+import com.dogiumlabs.coldweather.ui.location.LocationDialog
 import com.dogiumlabs.coldweather.ui.theme.ColdWeatherTheme
 
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    onLocationButtonClick: () -> Unit,
     viewModel: HomeViewModel = viewModel(factory = AppViewModelProvider.Factory)
 ) {
+    var isDialogDisplayed by remember { mutableStateOf(false) }
+
+    // Load dialog to switch location when button is pressed
+    if (isDialogDisplayed)
+        LocationDialog(
+            onSubmit = viewModel::updateWeatherState,
+            onDismissRequest = { isDialogDisplayed = !isDialogDisplayed }
+        )
+
     /** Top level composable that displays content based on UiState's status **/
     val homeUiState = viewModel.homeUiState
     AnimatedVisibility(
@@ -73,7 +86,9 @@ fun HomeScreen(
             HomeWeatherScreen(
                 weather = homeUiState.weather,
                 timeFormatter = viewModel::timeFormatter,
-                onLocationButtonClick = onLocationButtonClick,
+                onLocationButtonClick = {
+                    isDialogDisplayed = !isDialogDisplayed
+                },
                 modifier = modifier
             )
     }

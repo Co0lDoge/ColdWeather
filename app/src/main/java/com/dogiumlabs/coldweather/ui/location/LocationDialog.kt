@@ -31,6 +31,7 @@ import com.dogiumlabs.coldweather.ui.theme.ColdWeatherTheme
 
 @Composable
 fun LocationDialog(
+    onSubmit: () -> Unit,
     onDismissRequest: () -> Unit,
     modifier: Modifier = Modifier,
     viewModel: LocationViewModel = viewModel(factory = AppViewModelProvider.Factory),
@@ -55,7 +56,10 @@ fun LocationDialog(
                 onDismissRequest()
             },
             onLocationClick = viewModel::selectCity,
-            onSubmitClick = viewModel::updateCity,
+            onSubmitClick = {
+                viewModel.updateCity()
+                onSubmit()
+            },
             locations = viewModel.locationsState,
             modifier = modifier
         )
