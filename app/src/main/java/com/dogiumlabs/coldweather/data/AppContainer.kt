@@ -36,6 +36,8 @@ class ColdWeatherAppContainer(private val context: Context) : AppContainer {
     override val locationRepository: LocationRepository by lazy {
         LocationApiRepository(getLocationRetrofitService())
     }
+
+    // Dependency injection implementation of local savedLocationRepository
     override val savedLocationRepository: SavedLocationRepository by lazy {
         LocalSavedLocationRepository(savedLocationDao = SavedLocationDatabase.getDatabase(context).savedLocationDao())
     }

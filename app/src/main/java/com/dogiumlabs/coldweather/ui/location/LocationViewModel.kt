@@ -7,6 +7,8 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.dogiumlabs.coldweather.data.location.Location
+import com.dogiumlabs.coldweather.data.location.SavedLocation
+import com.dogiumlabs.coldweather.data.location.SavedLocationRepository
 import com.dogiumlabs.coldweather.network.location.LocationRepository
 import kotlinx.coroutines.launch
 import okio.IOException
@@ -19,7 +21,10 @@ data class LocationUiState(
 )
 
 /** Class that defines logic for LocationDialog  **/
-class LocationViewModel(private val locationRepository: LocationRepository) : ViewModel() {
+class LocationViewModel(
+    private val locationRepository: LocationRepository,
+    private val savedLocationRepository: SavedLocationRepository
+) : ViewModel() {
     // State of UI values
     var dialogUiState by mutableStateOf(LocationUiState())
         private set
@@ -74,8 +79,15 @@ class LocationViewModel(private val locationRepository: LocationRepository) : Vi
         )
     }
 
-    fun updateCity(text: String) {
-        // TODO: Change selected city when DropDownItem is clicked
+    fun updateCity() {
+        viewModelScope.launch {
+            savedLocationRepository.updateLocation(
+                SavedLocation(
+                    id = 1,
+                    name = dialogUiState.dialogText
+                )
+            )
+        }
     }
 
     fun resetDialogState() {

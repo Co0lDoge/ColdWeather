@@ -55,6 +55,7 @@ fun LocationDialog(
                 onDismissRequest()
             },
             onLocationClick = viewModel::selectCity,
+            onSubmitClick = viewModel::updateCity,
             locations = viewModel.locationsState,
             modifier = modifier
         )
@@ -69,6 +70,7 @@ fun LocationDialogCard(
     onShrinkRequest: () -> Unit,
     onDismissRequest: () -> Unit,
     onLocationClick: (String) -> Unit,
+    onSubmitClick: () -> Unit,
     locations: List<Location>,
     modifier: Modifier = Modifier
 ) {
@@ -100,11 +102,14 @@ fun LocationDialogCard(
                     .fillMaxWidth()
                     .padding(4.dp)
             ) {
-                Button(onClick = { onDismissRequest() }) {
+                Button(onClick = onDismissRequest) {
                     Text(text = stringResource(R.string.cancel))
                 }
                 Spacer(modifier = Modifier.padding(4.dp))
-                Button(onClick = { onDismissRequest() }) {
+                Button(onClick = {
+                    onSubmitClick()
+                    onDismissRequest()
+                }) {
                     Text(text = stringResource(R.string.submit))
                 }
             }
@@ -162,6 +167,7 @@ fun LocationDialogPreview() {
             onShrinkRequest = {},
             onDismissRequest = {},
             onLocationClick = { _ -> /* Do nothing */ },
+            onSubmitClick = {},
             isExpanded = false,
             inputText = "",
         )

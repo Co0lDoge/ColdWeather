@@ -7,6 +7,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.dogiumlabs.coldweather.data.location.SavedLocation
 import com.dogiumlabs.coldweather.data.location.SavedLocationRepository
 import com.dogiumlabs.coldweather.data.weather.Weather
 import com.dogiumlabs.coldweather.network.weather.WeatherRepository
@@ -38,6 +39,7 @@ class HomeViewModel(
         /** Gets weather from Weather Api retrofit service and updates Ui State**/
         viewModelScope.launch {
             val location = savedLocationRepository.getLocationStream(1).first().name
+            savedLocationRepository.insertLocation(SavedLocation(1, "London"))
             try {
                 homeUiState = HomeUiState.Success(
                     weather = weatherRepository.getWeather(location)
